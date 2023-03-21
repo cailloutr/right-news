@@ -1,6 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -30,15 +33,59 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        dataBinding true
+        viewBinding true
+    }
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "androidx.fragment:fragment-ktx:$fragment_version"
+
+    // Navigation Component
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+
+
+    // Hilt
+    implementation("com.google.dagger:hilt-android:$hilt_version")
+    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
+
+    // Coil
+    implementation("io.coil-kt:coil:$coil_version")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    testImplementation("com.google.truth:truth:$google_truth_version")
+
+
     testImplementation 'junit:junit:4.13.2'
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
+    testImplementation "io.mockk:mockk-android:${mockkVersion}"
+    testImplementation "io.mockk:mockk-agent:${mockkVersion}"
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
+    androidTestImplementation("com.google.truth:truth:$google_truth_version")
+    androidTestImplementation "io.mockk:mockk-android:${mockkVersion}"
+    androidTestImplementation "io.mockk:mockk-agent:${mockkVersion}"
+
+
+    debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
+
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
