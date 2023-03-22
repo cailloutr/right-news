@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.NewsFragment">
+    tools:context=".ui.newsfragment.NewsFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/toolbar_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        app:elevation="0dp"
+        app:elevation="@dimen/fragment_news_appbar_elevation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,13 +23,73 @@
             android:layout_height="?attr/actionBarSize" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:layout_width="match_parent"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_bar_layout"
+        style="@style/Widget.RightNews.SearchBar"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="New Fragment"
-        android:textAppearance="@style/TextAppearance.RightNews.Body1"
+        android:layout_margin="@dimen/default_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_layout"
-        tools:layout_editor_absoluteX="16dp" />
+        app:startIconDrawable="@drawable/ic_search_24">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/search_bar_hint"
+            android:imeActionLabel="@string/search_bar_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="textCapSentences" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/latest_news_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:textAppearance="@style/TextAppearance.RightNews.Headline6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_bar_layout"
+        tools:text="Latest news" />
+
+    <TextView
+        android:id="@+id/fragment_news_see_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:clickable="true"
+        android:drawablePadding="@dimen/small_margin"
+        android:focusable="true"
+        android:textAppearance="@style/TextAppearance.RightNews.Subtitle2"
+        android:textColor="?attr/colorSecondaryVariant"
+        app:drawableEndCompat="@drawable/ic_arrow_forward_24"
+        app:drawableTint="?attr/colorSecondaryVariant"
+        app:layout_constraintBaseline_toBaselineOf="@id/latest_news_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="See all" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/banners_recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/latest_news_label"
+        tools:listitem="@layout/latest_news_banner"/>
+    
+    <LinearLayout
+        android:id="@+id/banner_dots"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        app:layout_constraintTop_toBottomOf="@id/banners_recyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

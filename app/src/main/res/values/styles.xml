@@ -7,10 +7,15 @@
         <item name="subtitleTextAppearance">@style/TextAppearance.RightNews.Subtitle1</item>
     </style>
 
-    <style name="ThemeOverlay.App.Toolbar" parent="">
-        <item name="colorPrimary">?attr/colorPrimary</item>
-        <item name="colorPrimaryVariant">?attr/colorPrimaryVariant</item>
-        <item name="colorOnPrimary">?attr/colorOnPrimary</item>
+    <style name="Widget.RightNews.SearchBar" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxBackgroundColor">@color/color_on_surface_10</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/search_bar_radius</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/search_bar_radius</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/search_bar_radius</item>
+        <item name="boxCornerRadiusTopStart">@dimen/search_bar_radius</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="hintEnabled">false</item>
     </style>
 
     <style name="TextAppearance.RightNews.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
@@ -45,6 +50,12 @@
 
     <style name="TextAppearance.RightNews.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="fontFamily">@font/montserrat</item>
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextAppearance.RightNews.Headline6.Bold" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/montserrat_bold</item>
         <item name="android:fontFamily">@font/montserrat</item>
         <item name="android:textSize">20sp</item>
     </style>

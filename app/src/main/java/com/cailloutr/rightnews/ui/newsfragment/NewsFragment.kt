@@ -1,4 +1,4 @@
-package com.cailloutr.rightnews.ui
+package com.cailloutr.rightnews.ui.newsfragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.cailloutr.rightnews.R
+import com.cailloutr.rightnews.adapters.BannerAdapter
 import com.cailloutr.rightnews.databinding.FragmentNewsBinding
 
 
@@ -29,6 +30,9 @@ class NewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
+
+        val adapter = BannerAdapter {}
+        binding.bannersRecyclerView.adapter = adapter
     }
 
     private fun setupToolbar() {

@@ -3,5 +3,7 @@
     <string name="title_news">News</string>
     <string name="title_favorite">Favorite</string>
     <string name="title_profile">Profile</string>
+    <string name="search_bar_hint">Search</string>
+    <string name="banner_image_cd">Banner image</string>
 
 </resources>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/banner_container"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:layout_margin="@dimen/default_margin"
+    app:cardCornerRadius="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/banner_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/banner_image_cd"
+            android:scaleType="centerCrop"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="55dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="300dp" />
+
+        <TextView
+            android:id="@+id/banner_news_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            android:background="@drawable/banner_background"
+            android:padding="@dimen/extra_small_padding"
+            android:textAppearance="@style/TextAppearance.RightNews.Overline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guideline"
+            tools:text="by unknown Author " />
+
+        <TextView
+            android:id="@+id/banner_news_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:background="@drawable/banner_background"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:padding="@dimen/extra_small_padding"
+            android:textAppearance="@style/TextAppearance.RightNews.Headline6.Bold"
+            app:layout_constraintEnd_toStartOf="@id/guideline2"
+            app:layout_constraintStart_toStartOf="@id/banner_news_author"
+            app:layout_constraintTop_toBottomOf="@id/banner_news_author"
+            tools:text="Crypto investors should be prepared to lose all their money" />
+
+        <TextView
+            android:id="@+id/banner_news_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:background="@drawable/banner_background"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:padding="@dimen/extra_small_padding"
+            android:textAppearance="@style/TextAppearance.RightNews.Subtitle2"
+            app:layout_constraintEnd_toStartOf="@id/guideline2"
+            app:layout_constraintStart_toStartOf="@id/banner_news_author"
+            app:layout_constraintTop_toBottomOf="@id/banner_news_title"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lacus nibh, cursus a aliquet tincidunt, ornare quis risus. Sed nec felis magna. Nunc cursus in metus in sodales. Phasellus id quam egestas, consectetur enim a, posuere ligula." />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
