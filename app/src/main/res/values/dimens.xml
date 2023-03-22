@@ -5,4 +5,7 @@
     <dimen name="fragment_news_appbar_elevation">0dp</dimen>
     <dimen name="small_margin">8dp</dimen>
     <dimen name="extra_small_padding">2dp</dimen>
+    <dimen name="card_view_default_elevation">4dp</dimen>
+    <dimen name="banner_constraint_vertical_guideline">300dp</dimen>
+    <dimen name="view_pager_banner_height">250dp</dimen>
 </resources>

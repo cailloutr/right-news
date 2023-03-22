@@ -48,10 +48,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin"
-        android:textAppearance="@style/TextAppearance.RightNews.Headline6"
+        android:text="@string/fragment_news_latest_news"
+        android:textAppearance="@style/TextAppearance.RightNews.Headline6.Bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_bar_layout"
-        tools:text="Latest news" />
+        app:layout_constraintTop_toBottomOf="@id/search_bar_layout" />
 
     <TextView
         android:id="@+id/fragment_news_see_more"
@@ -61,35 +61,52 @@
         android:clickable="true"
         android:drawablePadding="@dimen/small_margin"
         android:focusable="true"
+        android:text="@string/fragment_news_see_all"
         android:textAppearance="@style/TextAppearance.RightNews.Subtitle2"
         android:textColor="?attr/colorSecondaryVariant"
         app:drawableEndCompat="@drawable/ic_arrow_forward_24"
         app:drawableTint="?attr/colorSecondaryVariant"
         app:layout_constraintBaseline_toBaselineOf="@id/latest_news_label"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="See all" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/banners_recyclerView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_margin"
-        android:clipToPadding="false"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/latest_news_label"
-        tools:listitem="@layout/latest_news_banner"/>
-    
-    <LinearLayout
-        android:id="@+id/banner_dots"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+    <!--
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/banners_recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/latest_news_label"
+            tools:listitem="@layout/latest_news_banner" />
+    -->
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/banners_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/view_pager_banner_height"
         android:layout_margin="@dimen/small_margin"
-        app:layout_constraintTop_toBottomOf="@id/banners_recyclerView"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:orientation="horizontal" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/latest_news_label" />
+
+    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+        android:id="@+id/banner_dots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:dotsColor="@android:color/darker_gray"
+        app:dotsCornerRadius="8dp"
+        app:dotsSize="8dp"
+        app:dotsSpacing="4dp"
+        app:dotsStrokeColor="?attr/colorPrimary"
+        app:dotsWidthFactor="2.5"
+        app:layout_constraintEnd_toEndOf="@id/banners_view_pager"
+        app:layout_constraintStart_toStartOf="@id/banners_view_pager"
+        app:layout_constraintTop_toBottomOf="@id/banners_view_pager"
+        app:progressMode="true"
+        app:selectedDotColor="?attr/colorPrimary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

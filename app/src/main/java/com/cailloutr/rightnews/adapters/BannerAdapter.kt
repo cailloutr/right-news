@@ -36,7 +36,9 @@ class BannerAdapter(
                 bannerNewsAuthor.text = banner.author
                 bannerNewsTitle.text = banner.title
                 bannerNewsDescription.text = banner.description
-                bannerImage.load(bannerImage)
+                bannerImage.load(banner.image) {
+                    crossfade(true)
+                }
             }
         }
     }

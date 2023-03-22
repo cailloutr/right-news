@@ -47,6 +47,9 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
+    // ViewPager's dots indicators
+    implementation("com.tbuonomo:dotsindicator:4.3")
+
     // Navigation Component
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")

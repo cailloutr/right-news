@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/banner_container"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
+    android:layout_height="match_parent"
     android:layout_margin="@dimen/default_margin"
-    app:cardCornerRadius="16dp">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="@dimen/card_view_default_elevation">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -34,48 +35,58 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="300dp" />
+            app:layout_constraintGuide_begin="@dimen/banner_constraint_vertical_guideline" />
 
         <TextView
             android:id="@+id/banner_news_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/small_margin"
+            android:layout_marginTop="4dp"
             android:background="@drawable/banner_background"
+            android:maxWidth="@dimen/banner_constraint_vertical_guideline"
             android:padding="@dimen/extra_small_padding"
             android:textAppearance="@style/TextAppearance.RightNews.Overline"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/guideline"
             tools:text="by unknown Author " />
 
         <TextView
             android:id="@+id/banner_news_title"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginEnd="@dimen/default_margin"
             android:background="@drawable/banner_background"
             android:ellipsize="end"
+            android:maxWidth="@dimen/banner_constraint_vertical_guideline"
             android:maxLines="3"
             android:padding="@dimen/extra_small_padding"
             android:textAppearance="@style/TextAppearance.RightNews.Headline6.Bold"
             app:layout_constraintEnd_toStartOf="@id/guideline2"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@id/banner_news_author"
             app:layout_constraintTop_toBottomOf="@id/banner_news_author"
-            tools:text="Crypto investors should be prepared to lose all their money" />
+            tools:text="Crypto " />
 
         <TextView
             android:id="@+id/banner_news_description"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/small_margin"
             android:background="@drawable/banner_background"
             android:ellipsize="end"
+            android:maxWidth="@dimen/banner_constraint_vertical_guideline"
             android:maxLines="2"
             android:padding="@dimen/extra_small_padding"
             android:textAppearance="@style/TextAppearance.RightNews.Subtitle2"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline2"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@id/banner_news_author"
             app:layout_constraintTop_toBottomOf="@id/banner_news_title"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lacus nibh, cursus a aliquet tincidunt, ornare quis risus. Sed nec felis magna. Nunc cursus in metus in sodales. Phasellus id quam egestas, consectetur enim a, posuere ligula." />

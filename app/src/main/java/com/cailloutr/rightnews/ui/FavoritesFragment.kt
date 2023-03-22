@@ -7,8 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.cailloutr.rightnews.R
 import com.cailloutr.rightnews.databinding.FragmentFavoritesBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class FavoritesFragment : Fragment() {
 
     private var _binding: FragmentFavoritesBinding? = null

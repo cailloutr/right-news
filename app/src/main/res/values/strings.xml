@@ -5,5 +5,8 @@
     <string name="title_profile">Profile</string>
     <string name="search_bar_hint">Search</string>
     <string name="banner_image_cd">Banner image</string>
+    <string name="fragment_news_latest_news">Latest news</string>
+    <string name="fragment_news_see_all">See all</string>
+    <string name="dotted">&#8226;</string>
 
 </resources>

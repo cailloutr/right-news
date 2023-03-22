@@ -5,18 +5,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.cailloutr.rightnews.R
 import com.cailloutr.rightnews.adapters.BannerAdapter
 import com.cailloutr.rightnews.databinding.FragmentNewsBinding
+import com.cailloutr.rightnews.ui.viewmodel.NewsViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+private const val TAG = "NewsFragment"
 
+@AndroidEntryPoint
 class NewsFragment : Fragment() {
 
     private var _binding: FragmentNewsBinding? = null
     val binding get() = _binding!!
+
+    private val viewModel: NewsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +43,19 @@ class NewsFragment : Fragment() {
         setupToolbar()
 
         val adapter = BannerAdapter {}
-        binding.bannersRecyclerView.adapter = adapter
+
+        binding.bannersViewPager.adapter = adapter
+        binding.bannerDots.attachTo(binding.bannersViewPager)
+
+        lifecycleScope.launch {
+            viewModel.bannersList
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                    adapter.submitList(it)
+                }
+        }
+
+
     }
 
     private fun setupToolbar() {
