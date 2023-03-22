@@ -7,7 +7,7 @@ A news app, where users can get the latest news from The Gardian Open Plataform
 - Hilt
 - ViewModel
 - Flow
-- Glide
+- Coil
 - Coroutines
 - Retrofit
 - Firebase
