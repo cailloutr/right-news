@@ -2,9 +2,18 @@
 <resources>
 
     <style name="Widget.RightNews.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.RightNews.Toolbar</item>
         <item name="titleTextAppearance">@style/TextAppearance.RightNews.Headline6</item>
         <item name="subtitleTextAppearance">@style/TextAppearance.RightNews.Subtitle1</item>
+    </style>
+
+    <style name="Widget.RightNews.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_background_selector</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/chip_stroke_color</item>
+        <item name="android:textColor">@color/chip_text_selector</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="android:textAppearance">@style/TextAppearance.RightNews.Body2</item>
     </style>
 
     <style name="Widget.RightNews.SearchBar" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
@@ -63,6 +72,11 @@
     <style name="TextAppearance.RightNews.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="fontFamily">@font/montserrat</item>
         <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="TextAppearance.RightNews.Subtitle1.Bold" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/montserrat_bold</item>
+        <item name="android:fontFamily">@font/montserrat_bold</item>
         <item name="android:textSize">16sp</item>
     </style>
 

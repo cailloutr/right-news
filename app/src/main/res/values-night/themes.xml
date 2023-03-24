@@ -18,7 +18,7 @@
         <item name="toolbarStyle">@style/Widget.RightNews.Toolbar</item>
     </style>
 
-    <style name="ThemeOverlay.App.Toolbar" parent="">
+    <style name="ThemeOverlay.RightNews.Toolbar" parent="">
         <item name="colorPrimary">?attr/colorPrimary</item>
         <item name="colorPrimaryVariant">?attr/colorPrimaryVariant</item>
         <item name="colorOnPrimary">?attr/colorOnPrimary</item>

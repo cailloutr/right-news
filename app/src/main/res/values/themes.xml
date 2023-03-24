@@ -12,13 +12,15 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <!-- Customize your theme here. -->
-        
+
         <item name="android:windowLightStatusBar">true</item>
 
         <item name="toolbarStyle">@style/Widget.RightNews.Toolbar</item>
+
+        <item name="chipStyle">@style/Widget.RightNews.Chip</item>
     </style>
 
-    <style name="ThemeOverlay.App.Toolbar" parent="">
+    <style name="ThemeOverlay.RightNews.Toolbar" parent="">
         <item name="colorPrimary">?attr/colorPrimary</item>
         <item name="colorPrimaryVariant">?attr/colorPrimaryVariant</item>
         <item name="colorOnPrimary">?attr/colorOnPrimary</item>

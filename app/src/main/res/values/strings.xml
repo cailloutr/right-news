@@ -8,5 +8,6 @@
     <string name="fragment_news_latest_news">Latest news</string>
     <string name="fragment_news_see_all">See all</string>
     <string name="dotted">&#8226;</string>
+    <string name="news_illustrative_image_ct">News illustrative image</string>
 
 </resources>

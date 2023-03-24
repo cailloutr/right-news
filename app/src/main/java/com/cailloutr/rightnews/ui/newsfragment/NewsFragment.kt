@@ -6,20 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.cailloutr.rightnews.R
 import com.cailloutr.rightnews.adapters.BannerAdapter
 import com.cailloutr.rightnews.databinding.FragmentNewsBinding
+import com.cailloutr.rightnews.enums.ItemNewsType
+import com.cailloutr.rightnews.extensions.collectLatestLifecycleFlow
+import com.cailloutr.rightnews.ui.chip.ChipItem
+import com.cailloutr.rightnews.ui.chip.toChip
 import com.cailloutr.rightnews.ui.viewmodel.NewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
-private const val TAG = "NewsFragment"
+//private const val TAG = "NewsFragment"
 
 @AndroidEntryPoint
 class NewsFragment : Fragment() {
@@ -28,6 +28,8 @@ class NewsFragment : Fragment() {
     val binding get() = _binding!!
 
     private val viewModel: NewsViewModel by viewModels()
+
+    private lateinit var sectionsList: List<ChipItem>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,18 +44,31 @@ class NewsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
 
-        val adapter = BannerAdapter {}
+        val bannerAdapter = BannerAdapter(ItemNewsType.BANNER) {}
 
-        binding.bannersViewPager.adapter = adapter
+        binding.bannersViewPager.adapter = bannerAdapter
         binding.bannerDots.attachTo(binding.bannersViewPager)
 
-        lifecycleScope.launch {
-            viewModel.bannersList
-                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect {
-                    adapter.submitList(it)
-                }
+        val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {}
+        binding.newsRecyclerView.adapter = newsAdapter
+
+        collectLatestLifecycleFlow(viewModel.bannersList) {
+            bannerAdapter.submitList(it)
         }
+
+        collectLatestLifecycleFlow(viewModel.bannersList) {
+            newsAdapter.submitList(it)
+        }
+
+
+        collectLatestLifecycleFlow(viewModel.sectionsList) { sections ->
+            sectionsList = sections
+            sections.forEach { chipItem ->
+                val chip = chipItem.toChip(requireContext(), binding.chipGroup)
+                binding.chipGroup.addView(chip)
+            }
+        }
+
 
 
     }

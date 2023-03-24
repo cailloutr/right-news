@@ -8,4 +8,10 @@
     <dimen name="card_view_default_elevation">4dp</dimen>
     <dimen name="banner_constraint_vertical_guideline">300dp</dimen>
     <dimen name="view_pager_banner_height">250dp</dimen>
+    <dimen name="card_default_corner_radius">16dp</dimen>
+    <dimen name="very_small_margin">4dp</dimen>
+    <dimen name="new_item_height">150dp</dimen>
+    <dimen name="dots_corner_radius">8dp</dimen>
+    <dimen name="dots_size">8dp</dimen>
+    <dimen name="dots_spacing">4dp</dimen>
 </resources>

@@ -1,59 +1,43 @@
 package com.cailloutr.rightnews.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import coil.load
+import com.cailloutr.rightnews.adapters.viewholder.BannerViewHolder
+import com.cailloutr.rightnews.adapters.viewholder.BaseViewHolder
+import com.cailloutr.rightnews.adapters.viewholder.NewsViewHolder
+import com.cailloutr.rightnews.databinding.CategorizedNewsItemBinding
 import com.cailloutr.rightnews.databinding.LatestNewsBannerBinding
+import com.cailloutr.rightnews.enums.ItemNewsType
 import com.cailloutr.rightnews.model.BannerNews
 
 const val TAG = "BannerAdapter"
 
 class BannerAdapter(
+    private val itemNewsType: ItemNewsType,
     private val onClick: (BannerNews) -> Unit,
-) : ListAdapter<BannerNews, BannerAdapter.BannerViewHolder>(DiffCallback) {
+) : ListAdapter<BannerNews, BaseViewHolder>(DiffCallback) {
 
-    private lateinit var banner: BannerNews
-
-    inner class BannerViewHolder(
-        private val binding: LatestNewsBannerBinding,
-    ) : ViewHolder(binding.root) {
-
-        init {
-            itemView.setOnClickListener {
-                if (::banner.isInitialized) {
-                    onClick
-                    Log.i(TAG, "Click: ")
-                }
-            }
-        }
-
-        fun bind(banner: BannerNews) {
-            binding.apply {
-                bannerNewsAuthor.text = banner.author
-                bannerNewsTitle.text = banner.title
-                bannerNewsDescription.text = banner.description
-                bannerImage.load(banner.image) {
-                    crossfade(true)
-                }
-            }
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BannerViewHolder {
-        return BannerViewHolder(
-            LatestNewsBannerBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+        return if (itemNewsType == ItemNewsType.BANNER)
+            BannerViewHolder(
+                LatestNewsBannerBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                ), onClick
+            ) else
+            NewsViewHolder(
+                CategorizedNewsItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                ), onClick
             )
-        )
     }
 
-    override fun onBindViewHolder(holder: BannerViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
