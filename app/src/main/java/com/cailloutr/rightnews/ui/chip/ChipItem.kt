@@ -12,8 +12,9 @@ import com.google.android.material.chip.Chip
 private const val TAG = "ChipItem"
 
 data class ChipItem(
-    val id: Long,
+    val id: String,
     val text: String,
+    val isChecked: Boolean = false
 )
 
 fun ChipItem.toChip(context: Context, viewGroup: ViewGroup): Chip {
@@ -21,12 +22,11 @@ fun ChipItem.toChip(context: Context, viewGroup: ViewGroup): Chip {
 
     chip.text = text
     chip.id = View.generateViewId()
-    chip.isChecked = chip.id == 2
+    chip.isChecked = isChecked
 
     chip.setOnClickListener {
         Log.i(TAG, "Chip ${chip.id} clicked")
     }
-
 
     return chip
 }

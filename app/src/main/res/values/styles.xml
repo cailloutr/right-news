@@ -16,6 +16,14 @@
         <item name="android:textAppearance">@style/TextAppearance.RightNews.Body2</item>
     </style>
 
+    <style name="ThemeOverlay.RightNews.Chip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">?attr/colorSurface</item>
+        <item name="chipStrokeColor">@color/color_primary_90</item>
+        <item name="chipStrokeWidth">2dp</item>
+        <item name="android:textColor">@color/color_primary_90</item>
+        <item name="android:textAppearance">@style/TextAppearance.RightNews.Body2</item>
+    </style>
+
     <style name="Widget.RightNews.SearchBar" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="boxBackgroundColor">@color/color_on_surface_10</item>
         <item name="boxCornerRadiusBottomEnd">@dimen/search_bar_radius</item>
@@ -74,6 +82,7 @@
         <item name="android:fontFamily">@font/montserrat</item>
         <item name="android:textSize">16sp</item>
     </style>
+
     <style name="TextAppearance.RightNews.Subtitle1.Bold" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="fontFamily">@font/montserrat_bold</item>
         <item name="android:fontFamily">@font/montserrat_bold</item>

@@ -102,33 +102,48 @@
             android:id="@+id/chip_group_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
             android:scrollbars="none"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/banner_dots">
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chip_group"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:clipToPadding="false"
-                android:paddingHorizontal="@dimen/default_margin"
-                app:selectionRequired="true"
-                app:singleLine="true"
-                app:singleSelection="true" />
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="@dimen/default_margin"
+                    app:selectionRequired="true"
+                    app:singleLine="true"
+                    app:singleSelection="true" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/fragment_news_all_sections"
+                    style="@style/ThemeOverlay.RightNews.Chip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/small_margin"
+                    android:minWidth="70dp"
+                    android:text="@string/fragment_news_all_sections"
+                    android:textAlignment="center" />
+            </LinearLayout>
         </HorizontalScrollView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/news_recycler_view"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/small_margin"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/chip_group_container"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:itemCount="10"
             tools:listitem="@layout/categorized_news_item" />
     </androidx.constraintlayout.widget.ConstraintLayout>
