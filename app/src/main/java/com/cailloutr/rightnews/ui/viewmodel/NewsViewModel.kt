@@ -1,15 +1,47 @@
 package com.cailloutr.rightnews.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.cailloutr.rightnews.model.BannerNews
-import com.cailloutr.rightnews.ui.chip.ChipItem
+import com.cailloutr.rightnews.model.Section
+import com.cailloutr.rightnews.other.DispatchersProvider
+import com.cailloutr.rightnews.usecases.NewsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NewsViewModel @Inject constructor() : ViewModel() {
+class NewsViewModel @Inject constructor(
+    private val dispatchers: DispatchersProvider,
+    private val newsUseCases: NewsUseCases,
+) : ViewModel() {
+
+    private val _sectionsState = MutableStateFlow<List<Section>>(listOf())
+    val sectionsState: StateFlow<List<Section>> = _sectionsState.asStateFlow()
+
+    init {
+        getSectionsFilteredById(
+            listOf(
+                "games",
+                "sport",
+                "tech",
+                "books",
+                "world-news",
+                "politics",
+                "culture",
+                "education"
+            )
+        )
+    }
+
+    fun getSectionsFilteredById(sections: List<String>? = null) {
+        viewModelScope.launch(dispatchers.main) {
+            _sectionsState.value = newsUseCases.getSectionsFilteredByIdUseCase(sections)
+        }
+    }
 
     // Mocked up list
     val bannersList = MutableStateFlow<List<BannerNews>>(
@@ -44,17 +76,4 @@ class NewsViewModel @Inject constructor() : ViewModel() {
             ),
         )
     ).asStateFlow()
-
-    val sectionsList = MutableStateFlow(
-        listOf(
-            ChipItem(id = 1, "Sport"),
-            ChipItem(id = 2, "Tech"),
-            ChipItem(id = 3, "Weather"),
-            ChipItem(id = 4, "Politics"),
-            ChipItem(id = 5, "Economics"),
-            ChipItem(id = 6, "Economics"),
-            ChipItem(id = 7, "Economics"),
-        )
-    ).asStateFlow()
-
 }

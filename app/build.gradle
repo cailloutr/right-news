@@ -16,6 +16,7 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+        buildConfigField("String", "API_KEY", API_KEY)
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -67,10 +68,16 @@ dependencies {
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
-    testImplementation("com.google.truth:truth:$google_truth_version")
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    // define a BOM and its version
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
 
 
     testImplementation 'junit:junit:4.13.2'
+    testImplementation("com.google.truth:truth:$google_truth_version")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
     testImplementation "io.mockk:mockk-android:${mockkVersion}"
     testImplementation "io.mockk:mockk-agent:${mockkVersion}"
