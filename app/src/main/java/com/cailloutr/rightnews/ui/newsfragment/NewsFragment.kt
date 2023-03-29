@@ -56,6 +56,8 @@ class NewsFragment : Fragment() {
         val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {}
         binding.newsRecyclerView.adapter = newsAdapter
 
+        setupSectionsChipItems()
+
         collectLatestLifecycleFlow(viewModel.latestNewsState) {
             newsAdapter.submitList(it?.data?.toNewsList())
         }
@@ -64,7 +66,6 @@ class NewsFragment : Fragment() {
             bannerAdapter.submitList(it?.data?.toNewsList())
         }
 
-        setupSectionsChipItems()
     }
 
     private fun setupSectionsChipItems() {

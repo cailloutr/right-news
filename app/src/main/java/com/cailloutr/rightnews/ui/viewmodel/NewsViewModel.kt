@@ -37,13 +37,13 @@ class NewsViewModel @Inject constructor(
 
     fun getSectionsFilteredById(sections: List<String>? = null) {
         viewModelScope.launch(dispatchers.main) {
-            _sectionsState.emit(newsUseCases.getSectionsFilteredByIdUseCase(sections))
+            _sectionsState.value = newsUseCases.getSectionsFilteredByIdUseCase(sections)
         }
     }
 
     //TODO: Test
     fun getLatestNews(orderBy: OrderBy, fields: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.main) {
             _latestNewsState.value = newsUseCases.getRecentNewsUseCase(
                 orderBy,
                 fields

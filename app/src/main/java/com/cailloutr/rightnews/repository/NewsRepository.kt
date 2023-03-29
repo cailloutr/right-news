@@ -15,14 +15,14 @@ class NewsRepository @Inject constructor(
 ) : NewsRepositoryInterface {
 
     override suspend fun getAllSections(): Resource<SectionsRoot> {
-        return try {
+        try {
             val response = theGuardianApi.getAllSections()
             if (response.isSuccessful) {
-                Resource.success(data = response.body())
+                return Resource.success(data = response.body())
             }
-            Resource.error(msg = response.message(), data = null)
+            return Resource.error(msg = response.message(), data = null)
         } catch (e: java.lang.Exception) {
-            Resource.error(msg = e.message.toString(), data = null)
+            return Resource.error(msg = e.message.toString(), data = null)
         }
     }
 
