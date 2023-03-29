@@ -38,25 +38,10 @@
             app:layout_constraintGuide_begin="@dimen/banner_constraint_vertical_guideline" />
 
         <TextView
-            android:id="@+id/banner_news_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
-            android:layout_marginTop="@dimen/very_small_margin"
-            android:background="@drawable/banner_background"
-            android:maxWidth="@dimen/banner_constraint_vertical_guideline"
-            android:padding="@dimen/extra_small_padding"
-            android:textAppearance="@style/TextAppearance.RightNews.Overline"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/guideline"
-            tools:text="by unknown Author " />
-
-        <TextView
             android:id="@+id/banner_news_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginEnd="@dimen/default_margin"
             android:background="@drawable/banner_background"
@@ -67,8 +52,8 @@
             android:textAppearance="@style/TextAppearance.RightNews.Headline6.Bold"
             app:layout_constraintEnd_toStartOf="@id/guideline2"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@id/banner_news_author"
-            app:layout_constraintTop_toBottomOf="@id/banner_news_author"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Crypto " />
 
         <TextView
@@ -87,7 +72,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline2"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@id/banner_news_author"
+            app:layout_constraintStart_toStartOf="@id/banner_news_title"
             app:layout_constraintTop_toBottomOf="@id/banner_news_title"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis lacus nibh, cursus a aliquet tincidunt, ornare quis risus. Sed nec felis magna. Nunc cursus in metus in sodales. Phasellus id quam egestas, consectetur enim a, posuere ligula." />
 

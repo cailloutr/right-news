@@ -1,6 +1,6 @@
 package com.cailloutr.rightnews.usecases
 
-import com.cailloutr.rightnews.data.network.responses.toDefaultSection
+import com.cailloutr.rightnews.data.network.responses.sections.toDefaultSection
 import com.cailloutr.rightnews.model.Section
 import com.cailloutr.rightnews.other.Status
 import com.cailloutr.rightnews.repository.NewsRepositoryInterface

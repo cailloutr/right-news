@@ -1,4 +1,4 @@
-package com.cailloutr.rightnews.data.network.responses
+package com.cailloutr.rightnews.data.network.responses.sections
 
 import com.cailloutr.rightnews.enums.Code
 import com.cailloutr.rightnews.model.Section

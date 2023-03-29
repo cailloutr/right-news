@@ -1,7 +1,10 @@
 package com.cailloutr.rightnews.repository
 
-import com.cailloutr.rightnews.data.network.responses.SectionsRoot
+import com.cailloutr.rightnews.constants.Constants
+import com.cailloutr.rightnews.data.network.responses.news.NewsRoot
+import com.cailloutr.rightnews.data.network.responses.sections.SectionsRoot
 import com.cailloutr.rightnews.data.network.service.TheGuardianApiHelper
+import com.cailloutr.rightnews.enums.OrderBy
 import com.cailloutr.rightnews.other.Resource
 import com.cailloutr.rightnews.other.Status
 import com.google.common.truth.Truth.assertThat
@@ -30,18 +33,19 @@ class NewsRepositoryTest {
     }
 
     @Test
-    fun `when api result is success then return a Resource of success`() = runTest {
-        coEvery {
-            theGuardianApi.getAllSections()
-        }.returns(Response.success(null))
+    fun `get All Sections when api result is success then return a Resource of success`() =
+        runTest {
+            coEvery {
+                theGuardianApi.getAllSections()
+            }.returns(Response.success(null))
 
-        val result: Resource<SectionsRoot> = repository.getAllSections()
+            val result: Resource<SectionsRoot> = repository.getAllSections()
 
-        assertThat(result.status).isEqualTo(Status.SUCCESS)
-    }
+            assertThat(result.status).isEqualTo(Status.SUCCESS)
+        }
 
     @Test
-    fun `when api result is error then return a Resource of error`() = runTest{
+    fun `get All Sections when api result is error then return a Resource of error`() = runTest {
         val error = "Error"
         val response = Response.error<SectionsRoot>(
             404,
@@ -55,5 +59,25 @@ class NewsRepositoryTest {
 
         assertThat(result.status).isEqualTo(Status.ERROR)
         assertThat(result.message).isEqualTo(response.message())
+    }
+
+    @Test
+    fun `get news ordered by date when response is error should emit a Resource error`() = runTest {
+        val error = "Error"
+        val response = Response.error<NewsRoot>(
+            404,
+            error.toResponseBody()
+        )
+        coEvery { theGuardianApi.getNewsOrderedByDate(
+            OrderBy.NEWEST,
+            Constants.API_CALL_FIELDS
+        ) }.returns(
+            response
+        )
+
+        repository.getNewsOrderedByDate(
+            OrderBy.NEWEST,
+            Constants.API_CALL_FIELDS
+        )
     }
 }

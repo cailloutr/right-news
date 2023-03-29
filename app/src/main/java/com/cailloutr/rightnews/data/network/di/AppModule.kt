@@ -1,4 +1,4 @@
-package com.cailloutr.rightnews.di
+package com.cailloutr.rightnews.data.network.di
 
 import com.cailloutr.rightnews.BuildConfig
 import com.cailloutr.rightnews.constants.Constants
@@ -8,6 +8,7 @@ import com.cailloutr.rightnews.data.network.service.TheGuardianApiImpl
 import com.cailloutr.rightnews.other.DefaultDispatchers
 import com.cailloutr.rightnews.other.DispatchersProvider
 import com.cailloutr.rightnews.repository.NewsRepository
+import com.cailloutr.rightnews.usecases.GetRecentNewsUseCase
 import com.cailloutr.rightnews.usecases.GetSectionsFilteredByIdUseCase
 import com.cailloutr.rightnews.usecases.NewsUseCases
 import dagger.Module
@@ -64,7 +65,8 @@ object AppModule {
     @Provides
     fun providesNewsUseCases(repository: NewsRepository): NewsUseCases {
         return NewsUseCases(
-            GetSectionsFilteredByIdUseCase(repository)
+            GetSectionsFilteredByIdUseCase(repository),
+            GetRecentNewsUseCase(repository)
         )
     }
 

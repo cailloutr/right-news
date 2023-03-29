@@ -10,14 +10,14 @@ import com.cailloutr.rightnews.adapters.viewholder.NewsViewHolder
 import com.cailloutr.rightnews.databinding.CategorizedNewsItemBinding
 import com.cailloutr.rightnews.databinding.LatestNewsBannerBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
-import com.cailloutr.rightnews.model.BannerNews
+import com.cailloutr.rightnews.model.News
 
 const val TAG = "BannerAdapter"
 
 class BannerAdapter(
     private val itemNewsType: ItemNewsType,
-    private val onClick: (BannerNews) -> Unit,
-) : ListAdapter<BannerNews, BaseViewHolder>(DiffCallback) {
+    private val onClick: (News) -> Unit,
+) : ListAdapter<News, BaseViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return if (itemNewsType == ItemNewsType.BANNER)
@@ -42,11 +42,11 @@ class BannerAdapter(
     }
 
     companion object {
-        private val DiffCallback = object : DiffUtil.ItemCallback<BannerNews>() {
-            override fun areItemsTheSame(oldItem: BannerNews, newItem: BannerNews) =
+        private val DiffCallback = object : DiffUtil.ItemCallback<News>() {
+            override fun areItemsTheSame(oldItem: News, newItem: News) =
                 oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: BannerNews, newItem: BannerNews) =
+            override fun areContentsTheSame(oldItem: News, newItem: News) =
                 oldItem == newItem
         }
     }

@@ -1,4 +1,4 @@
-package com.cailloutr.rightnews.data.network.responses
+package com.cailloutr.rightnews.data.network.responses.sections
 
 import com.google.gson.annotations.SerializedName
 

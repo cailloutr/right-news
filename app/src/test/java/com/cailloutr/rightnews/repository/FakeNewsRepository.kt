@@ -1,11 +1,14 @@
 package com.cailloutr.rightnews.repository
 
-import com.cailloutr.rightnews.data.network.responses.SectionsEdition
-import com.cailloutr.rightnews.data.network.responses.SectionsResponse
-import com.cailloutr.rightnews.data.network.responses.SectionsResult
-import com.cailloutr.rightnews.data.network.responses.SectionsRoot
+import com.cailloutr.rightnews.data.network.responses.news.NewsRoot
+import com.cailloutr.rightnews.data.network.responses.sections.SectionsEdition
+import com.cailloutr.rightnews.data.network.responses.sections.SectionsResponse
+import com.cailloutr.rightnews.data.network.responses.sections.SectionsResult
+import com.cailloutr.rightnews.data.network.responses.sections.SectionsRoot
 import com.cailloutr.rightnews.enums.Code
+import com.cailloutr.rightnews.enums.OrderBy
 import com.cailloutr.rightnews.other.Resource
+import retrofit2.Response
 
 class FakeNewsRepository : NewsRepositoryInterface {
 
@@ -66,5 +69,12 @@ class FakeNewsRepository : NewsRepositoryInterface {
                 )
             )
         )
+    }
+
+    override suspend fun getNewsOrderedByDate(
+        orderBy: OrderBy,
+        fields: String,
+    ): Response<NewsRoot> {
+        TODO("Not yet implemented")
     }
 }
