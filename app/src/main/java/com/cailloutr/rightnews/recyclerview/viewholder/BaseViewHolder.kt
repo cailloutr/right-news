@@ -1,9 +1,9 @@
-package com.cailloutr.rightnews.adapters.viewholder
+package com.cailloutr.rightnews.recyclerview.viewholder
 
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.cailloutr.rightnews.adapters.TAG
+import com.cailloutr.rightnews.recyclerview.TAG
 import com.cailloutr.rightnews.model.News
 
 open class BaseViewHolder(

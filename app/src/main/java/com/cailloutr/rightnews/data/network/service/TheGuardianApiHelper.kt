@@ -9,6 +9,11 @@ interface TheGuardianApiHelper {
 
     suspend fun getAllSections(): Response<SectionsRoot>
 
+    suspend fun getNewsOfSection(
+        section: String
+    ): Response<NewsRoot>
+
+
     suspend fun getNewsOrderedByDate(
         orderBy: OrderBy,
         fields: String,

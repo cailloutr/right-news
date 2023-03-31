@@ -1,5 +1,6 @@
-package com.cailloutr.rightnews.adapters.viewholder
+package com.cailloutr.rightnews.recyclerview.viewholder
 
+import android.text.Html
 import coil.load
 import com.cailloutr.rightnews.databinding.LatestNewsBannerBinding
 import com.cailloutr.rightnews.model.News
@@ -13,7 +14,7 @@ class BannerViewHolder(
         super.bind(news)
         binding.apply {
             bannerNewsTitle.text = news.webTitle
-            bannerNewsDescription.text = news.trailText
+            bannerNewsDescription.text = Html.fromHtml(news.trailText, Html.FROM_HTML_MODE_COMPACT)
             bannerNewsImage.load(news.thumbnail) {
                 crossfade(true)
             }

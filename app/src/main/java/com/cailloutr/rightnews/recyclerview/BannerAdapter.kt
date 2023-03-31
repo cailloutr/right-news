@@ -1,12 +1,12 @@
-package com.cailloutr.rightnews.adapters
+package com.cailloutr.rightnews.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.cailloutr.rightnews.adapters.viewholder.BannerViewHolder
-import com.cailloutr.rightnews.adapters.viewholder.BaseViewHolder
-import com.cailloutr.rightnews.adapters.viewholder.NewsViewHolder
+import com.cailloutr.rightnews.recyclerview.viewholder.BannerViewHolder
+import com.cailloutr.rightnews.recyclerview.viewholder.BaseViewHolder
+import com.cailloutr.rightnews.recyclerview.viewholder.NewsViewHolder
 import com.cailloutr.rightnews.databinding.CategorizedNewsItemBinding
 import com.cailloutr.rightnews.databinding.LatestNewsBannerBinding
 import com.cailloutr.rightnews.enums.ItemNewsType

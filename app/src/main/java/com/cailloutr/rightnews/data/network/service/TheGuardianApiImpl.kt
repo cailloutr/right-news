@@ -14,6 +14,10 @@ class TheGuardianApiImpl @Inject constructor(
         return theGuardianApi.getAllSections()
     }
 
+    override suspend fun getNewsOfSection(section: String): Response<NewsRoot> {
+        return theGuardianApi.getNewsOfSection(section)
+    }
+
     override suspend fun getNewsOrderedByDate(
         orderBy: OrderBy,
         fields: String,

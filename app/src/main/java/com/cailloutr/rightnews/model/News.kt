@@ -12,6 +12,7 @@ data class News(
     val isHosted: Boolean,
     val pillarId: String,
     val pillarName: String,
-    val trailText: String,
-    val thumbnail: String
+    val trailText: String?,
+    val thumbnail: String?,
+    val headline: String?
 )

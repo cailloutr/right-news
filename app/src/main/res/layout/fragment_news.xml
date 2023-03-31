@@ -1,152 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="match_parent">
 
-    tools:context=".ui.newsfragment.NewsFragment">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        tools:context=".ui.newsfragment.NewsFragment">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/toolbar_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:elevation="@dimen/fragment_news_appbar_elevation"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search_bar_layout"
-            style="@style/Widget.RightNews.SearchBar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_layout"
-            app:startIconDrawable="@drawable/ic_search_24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/search_bar_hint"
-                android:imeActionLabel="@string/search_bar_hint"
-                android:imeOptions="actionSearch"
-                android:inputType="textCapSentences" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/latest_news_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/fragment_news_latest_news"
-            android:textAppearance="@style/TextAppearance.RightNews.Headline6.Bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/search_bar_layout" />
-
-        <TextView
-            android:id="@+id/fragment_news_see_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:clickable="true"
-            android:drawablePadding="@dimen/small_margin"
-            android:focusable="true"
-            android:text="@string/fragment_news_see_all"
-            android:textAppearance="@style/TextAppearance.RightNews.Subtitle2"
-            android:textColor="?attr/colorSecondaryVariant"
-            app:drawableEndCompat="@drawable/ic_arrow_forward_24"
-            app:drawableTint="?attr/colorSecondaryVariant"
-            app:layout_constraintBaseline_toBaselineOf="@id/latest_news_label"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/banners_view_pager"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/view_pager_banner_height"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/latest_news_label" />
+            android:layout_height="wrap_content">
 
-        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-            android:id="@+id/banner_dots"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:dotsColor="@android:color/darker_gray"
-            app:dotsCornerRadius="@dimen/dots_corner_radius"
-            app:dotsSize="@dimen/dots_size"
-            app:dotsSpacing="@dimen/dots_spacing"
-            app:dotsStrokeColor="?attr/colorPrimary"
-            app:dotsWidthFactor="2.5"
-            app:layout_constraintEnd_toEndOf="@id/banners_view_pager"
-            app:layout_constraintStart_toStartOf="@id/banners_view_pager"
-            app:layout_constraintTop_toBottomOf="@id/banners_view_pager"
-            app:progressMode="true"
-            app:selectedDotColor="?attr/colorPrimary" />
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/toolbar_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                app:elevation="@dimen/fragment_news_appbar_elevation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <HorizontalScrollView
-            android:id="@+id/chip_group_container"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_margin"
-            android:scrollbars="none"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/banner_dots">
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize" />
+            </com.google.android.material.appbar.AppBarLayout>
 
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/search_bar_layout"
+                style="@style/Widget.RightNews.SearchBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar_layout"
+                app:startIconDrawable="@drawable/ic_search_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/search_bar_hint"
+                    android:imeActionLabel="@string/search_bar_hint"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textCapSentences" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/latest_news_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_margin="@dimen/default_margin"
+                android:text="@string/fragment_news_latest_news"
+                android:textAppearance="@style/TextAppearance.RightNews.Headline6.Bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/search_bar_layout" />
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chip_group"
+            <TextView
+                android:id="@+id/fragment_news_see_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:clickable="true"
+                android:drawablePadding="@dimen/small_margin"
+                android:focusable="true"
+                android:text="@string/fragment_news_see_all"
+                android:textAppearance="@style/TextAppearance.RightNews.Subtitle2"
+                android:textColor="?attr/colorSecondaryVariant"
+                app:drawableEndCompat="@drawable/ic_arrow_forward_24"
+                app:drawableTint="?attr/colorSecondaryVariant"
+                app:layout_constraintBaseline_toBaselineOf="@id/latest_news_label"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/banners_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/view_pager_banner_height"
+                android:animateLayoutChanges="true"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/latest_news_label" />
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_view_pager_layout"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/view_pager_banner_height"
+                android:animateLayoutChanges="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/banners_view_pager">
+
+                <LinearLayout
+                    android:id="@+id/shimmer_view_pager_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/shimmer_latest_news_banner" />
+                </LinearLayout>
+
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+            <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                android:id="@+id/banner_dots"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:dotsColor="@android:color/darker_gray"
+                app:dotsCornerRadius="@dimen/dots_corner_radius"
+                app:dotsSize="@dimen/dots_size"
+                app:dotsSpacing="@dimen/dots_spacing"
+                app:dotsStrokeColor="?attr/colorPrimary"
+                app:dotsWidthFactor="2.5"
+                app:layout_constraintEnd_toEndOf="@id/shimmer_view_pager_layout"
+                app:layout_constraintStart_toStartOf="@id/shimmer_view_pager_layout"
+                app:layout_constraintTop_toBottomOf="@id/shimmer_view_pager_layout"
+                app:progressMode="true"
+                app:selectedDotColor="?attr/colorPrimary" />
+
+            <HorizontalScrollView
+                android:id="@+id/chip_group_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/banner_dots">
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:clipToPadding="false"
-                    android:paddingHorizontal="@dimen/default_margin"
-                    app:selectionRequired="true"
-                    app:singleLine="true"
-                    app:singleSelection="true" />
+                    android:orientation="horizontal">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/fragment_news_all_sections"
-                    style="@style/ThemeOverlay.RightNews.Chip"
-                    android:layout_width="wrap_content"
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chip_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:clipToPadding="false"
+                        android:paddingHorizontal="@dimen/default_margin"
+                        app:selectionRequired="true"
+                        app:singleLine="true"
+                        app:singleSelection="true" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/fragment_news_all_sections"
+                        style="@style/ThemeOverlay.RightNews.Chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/small_margin"
+                        android:minWidth="70dp"
+                        android:text="@string/fragment_news_all_sections"
+                        android:textAlignment="center" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_recyclerview_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chip_group_container">
+
+                <LinearLayout
+                    android:id="@+id/shimmer_container"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/small_margin"
-                    android:minWidth="70dp"
-                    android:text="@string/fragment_news_all_sections"
-                    android:textAlignment="center" />
-            </LinearLayout>
-        </HorizontalScrollView>
+                    android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/news_recycler_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/chip_group_container"
-            tools:itemCount="10"
-            tools:listitem="@layout/categorized_news_item" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+                    <include layout="@layout/shimmer_categorized_news_item" />
+
+                    <include layout="@layout/shimmer_categorized_news_item" />
+
+                    <include layout="@layout/shimmer_categorized_news_item" />
+
+                    <include layout="@layout/shimmer_categorized_news_item" />
+
+                    <include layout="@layout/shimmer_categorized_news_item" />
+
+                    <include layout="@layout/shimmer_categorized_news_item" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/news_recycler_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chip_group_container"
+                tools:itemCount="10"
+                tools:listitem="@layout/categorized_news_item" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+

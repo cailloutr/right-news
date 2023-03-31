@@ -1,5 +1,7 @@
 package com.cailloutr.rightnews.data.network.responses.news
 
+import com.cailloutr.rightnews.model.NewsContainer
+
 data class NewsResponse(
     val status: String,
     val userTier: String,
@@ -13,3 +15,15 @@ data class NewsResponse(
 )
 
 fun NewsResponse.toNewsList() = results.map { newsResult -> newsResult.toNews() }
+
+fun NewsResponse.toNewsContainer(): NewsContainer {
+    return NewsContainer(
+        total = total,
+        startIndex = startIndex,
+        pageSize = pageSize,
+        currentPage = currentPage,
+        pages = pages,
+        orderBy = orderBy,
+        results = results.map { it.toNews() }
+    )
+}

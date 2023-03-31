@@ -5,8 +5,6 @@ import com.cailloutr.rightnews.data.network.responses.news.NewsRoot
 import com.cailloutr.rightnews.data.network.responses.sections.SectionsRoot
 import com.cailloutr.rightnews.data.network.service.TheGuardianApiHelper
 import com.cailloutr.rightnews.enums.OrderBy
-import com.cailloutr.rightnews.other.Resource
-import com.cailloutr.rightnews.other.Status
 import com.google.common.truth.Truth.assertThat
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -33,15 +31,15 @@ class NewsRepositoryTest {
     }
 
     @Test
-    fun `get All Sections when api result is success then return a Resource of success`() =
+    fun `get All Sections when api result is success then return a Response of success`() =
         runTest {
             coEvery {
                 theGuardianApi.getAllSections()
             }.returns(Response.success(null))
 
-            val result: Resource<SectionsRoot> = repository.getAllSections()
+            val result = repository.getAllSections()
 
-            assertThat(result.status).isEqualTo(Status.SUCCESS)
+            assertThat(result.isSuccessful).isTrue()
         }
 
     @Test
@@ -55,14 +53,14 @@ class NewsRepositoryTest {
             response
         )
 
-        val result: Resource<SectionsRoot> = repository.getAllSections()
+        val result = repository.getAllSections()
 
-        assertThat(result.status).isEqualTo(Status.ERROR)
-        assertThat(result.message).isEqualTo(response.message())
+        assertThat(result.isSuccessful).isFalse()
+        assertThat(result.message()).isEqualTo(response.message())
     }
 
     @Test
-    fun `get news ordered by date when response is error should emit a Resource error`() = runTest {
+    fun `get news ordered by date when response is error should return a Resource error`() = runTest {
         val error = "Error"
         val response = Response.error<NewsRoot>(
             404,
@@ -75,9 +73,39 @@ class NewsRepositoryTest {
             response
         )
 
-        repository.getNewsOrderedByDate(
+        val result: Response<NewsRoot> = repository.getNewsOrderedByDate(
             OrderBy.NEWEST,
             Constants.API_CALL_FIELDS
         )
+
+        assertThat(result).isEqualTo(response)
+    }
+
+    @Test
+    fun `get news of sections when response is error should return a Resource error`() = runTest {
+        val error = "Error"
+        val response = Response.error<NewsRoot>(
+            404,
+            error.toResponseBody()
+        )
+
+        coEvery { theGuardianApi.getNewsOfSection("section") }.returns(
+            response
+        )
+
+        val result = repository.getNewsBySection("section")
+
+        assertThat(result.isSuccessful).isFalse()
+    }
+
+    @Test
+    fun `get news of sections when response is success should return a Resource seccess`() = runTest {
+        coEvery { theGuardianApi.getNewsOfSection("section") }.returns(
+            Response.success(null)
+        )
+
+        val result = repository.getNewsBySection("section")
+
+        assertThat(result.isSuccessful).isTrue()
     }
 }

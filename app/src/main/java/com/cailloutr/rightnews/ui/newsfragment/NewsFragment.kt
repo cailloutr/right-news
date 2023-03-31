@@ -1,6 +1,7 @@
 package com.cailloutr.rightnews.ui.newsfragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,19 +11,23 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.cailloutr.rightnews.R
-import com.cailloutr.rightnews.adapters.BannerAdapter
-import com.cailloutr.rightnews.data.network.responses.news.toNewsList
 import com.cailloutr.rightnews.data.network.service.TheGuardianApi
 import com.cailloutr.rightnews.databinding.FragmentNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
 import com.cailloutr.rightnews.extensions.collectLatestLifecycleFlow
+import com.cailloutr.rightnews.extensions.hide
+import com.cailloutr.rightnews.extensions.show
+import com.cailloutr.rightnews.extensions.snackbar
+import com.cailloutr.rightnews.other.Status
+import com.cailloutr.rightnews.recyclerview.BannerAdapter
+import com.cailloutr.rightnews.ui.CustomItemAnimator
 import com.cailloutr.rightnews.ui.chip.ChipItem
 import com.cailloutr.rightnews.ui.chip.toChip
 import com.cailloutr.rightnews.ui.viewmodel.NewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-//private const val TAG = "NewsFragment"
+private const val TAG = "NewsFragment"
 
 @AndroidEntryPoint
 class NewsFragment : Fragment() {
@@ -55,30 +60,89 @@ class NewsFragment : Fragment() {
 
         val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {}
         binding.newsRecyclerView.adapter = newsAdapter
+        binding.newsRecyclerView.itemAnimator = CustomItemAnimator()
 
+//        // Setup Sections Chips
         setupSectionsChipItems()
 
+        // Setup Banner News
         collectLatestLifecycleFlow(viewModel.latestNewsState) {
-            newsAdapter.submitList(it?.data?.toNewsList())
+            when (it.status) {
+                Status.LOADING -> {
+                    binding.bannersViewPager.hide()
+                    binding.shimmerViewPagerLayout.show()
+                    binding.shimmerViewPagerLayout.startShimmerAnimation()
+                }
+                Status.SUCCESS -> {
+                    if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
+                        false
+
+                    it.data?.let { newContainer ->
+                        binding.shimmerViewPagerLayout.hide()
+                        binding.shimmerViewPagerLayout.stopShimmerAnimation()
+                        binding.bannersViewPager.show()
+                        bannerAdapter.submitList(newContainer.results)
+                    }
+                }
+                Status.ERROR -> {
+                    it.message?.let { message ->
+                        binding.root.snackbar(message)
+                        Log.i(TAG, "Error: $message")
+                    }
+                }
+            }
+
         }
 
-        collectLatestLifecycleFlow(viewModel.latestNewsState) {
-            bannerAdapter.submitList(it?.data?.toNewsList())
+        // Setup Section's news
+        collectLatestLifecycleFlow(viewModel.sectionsNewsState) {
+            when (it.status) {
+                Status.LOADING -> {
+                    binding.newsRecyclerView.hide()
+                    binding.shimmerRecyclerviewLayout.show()
+                    binding.shimmerRecyclerviewLayout.startShimmerAnimation()
+                }
+                Status.SUCCESS -> {
+                    if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
+                        false
+
+                    it.data?.let { newsList ->
+                        binding.shimmerRecyclerviewLayout.hide()
+                        binding.shimmerRecyclerviewLayout.stopShimmerAnimation()
+                        binding.newsRecyclerView.show()
+                        newsAdapter.submitList(newsList)
+                    }
+                }
+                Status.ERROR -> {
+                    //TODO
+                }
+            }
+        }
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.fetchDataFromApi()
         }
 
     }
 
     private fun setupSectionsChipItems() {
-        collectLatestLifecycleFlow(viewModel.sectionsState) { sections ->
+        collectLatestLifecycleFlow(viewModel.sectionsListState) { sections ->
             binding.chipGroup.removeAllViews()
-            repeat(sections.size) {
-                val isChecked = it == 0
-                val chip = ChipItem(
-                    id = sections[it].id,
-                    text = sections[it].title,
-                    isChecked = isChecked
-                )
-                binding.chipGroup.addView(chip.toChip(requireContext(), binding.chipGroup))
+
+            val listOfSections = sections.data?.listOfSections
+            listOfSections?.size?.let { size ->
+                repeat(size) {
+                    val isChecked = it == 0
+                    val chip = ChipItem(
+                        id = listOfSections[it].id,
+                        text = listOfSections[it].title,
+                        isChecked = isChecked
+                    ) { id ->
+                        viewModel.setSelectedSections(id)
+                        viewModel.getNewsBySection()
+                    }
+                    binding.chipGroup.addView(chip.toChip(requireContext(), binding.chipGroup))
+                }
             }
         }
     }

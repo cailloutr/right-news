@@ -1,6 +1,7 @@
 package com.cailloutr.rightnews.usecases
 
 data class NewsUseCases(
-    val getSectionsFilteredByIdUseCase: GetSectionsFilteredByIdUseCase,
-    val getRecentNewsUseCase: GetRecentNewsUseCase
+    val getSectionsUseCase: GetSectionsUseCase,
+    val getRecentNewsUseCase: GetRecentNewsUseCase,
+    val getNewsBySectionUseCase: GetNewsBySectionUseCase
 )
