@@ -6,18 +6,22 @@ import com.cailloutr.rightnews.data.network.responses.sections.SectionsRoot
 import com.cailloutr.rightnews.data.network.service.TheGuardianApiHelper
 import com.cailloutr.rightnews.enums.OrderBy
 import com.google.common.truth.Truth.assertThat
-import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.junit4.MockKRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import retrofit2.Response
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NewsRepositoryTest {
+
+    @get:Rule
+    val mockkRule = MockKRule(this)
 
     @MockK
     private lateinit var theGuardianApi: TheGuardianApiHelper
@@ -26,7 +30,6 @@ class NewsRepositoryTest {
 
     @Before
     fun setUp() {
-        MockKAnnotations.init(this, true)
         repository = NewsRepository(theGuardianApi)
     }
 

@@ -48,13 +48,18 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
+    // SwipeRefresh Layout
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+
+    // Shimmer
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+
     // ViewPager's dots indicators
     implementation("com.tbuonomo:dotsindicator:4.3")
 
     // Navigation Component
     implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
     implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
-
 
     // Hilt
     implementation("com.google.dagger:hilt-android:$hilt_version")
