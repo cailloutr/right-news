@@ -18,7 +18,6 @@ import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -37,14 +36,10 @@ class NewsViewModelTest {
 
     @MockK
     private lateinit var newsUseCase: NewsUseCases
-    private lateinit var sectionsState: MutableStateFlow<List<Section>>
-//    private lateinit var latestNewsState: MutableStateFlow<Resource<NewsResponse>>
 
 
     @Before
     fun setUp() {
-        sectionsState = MutableStateFlow(listOf())
-
         viewModel = NewsViewModel(
             TestCoroutineDispatcher(),
             newsUseCase

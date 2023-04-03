@@ -40,6 +40,8 @@ class NewsViewModel @Inject constructor(
     private val _selectedSectionState = MutableStateFlow(FIRST_SECTIONS_ID)
     val selectedSectionsState: StateFlow<String> = _selectedSectionState.asStateFlow()
 
+//    private lateinit var coroutineJob: Job
+
     init {
         fetchDataFromApi()
     }

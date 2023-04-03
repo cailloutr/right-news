@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.cailloutr.rightnews.R
-import com.cailloutr.rightnews.data.network.service.TheGuardianApi
 import com.cailloutr.rightnews.databinding.FragmentNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
 import com.cailloutr.rightnews.extensions.collectLatestLifecycleFlow
@@ -25,7 +24,6 @@ import com.cailloutr.rightnews.ui.chip.ChipItem
 import com.cailloutr.rightnews.ui.chip.toChip
 import com.cailloutr.rightnews.ui.viewmodel.NewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 private const val TAG = "NewsFragment"
 
@@ -36,9 +34,6 @@ class NewsFragment : Fragment() {
     val binding get() = _binding!!
 
     private val viewModel: NewsViewModel by viewModels()
-
-    @Inject
-    lateinit var api: TheGuardianApi
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -114,7 +109,10 @@ class NewsFragment : Fragment() {
                     }
                 }
                 Status.ERROR -> {
-                    //TODO
+                    it.message?.let { message ->
+                        binding.root.snackbar(message)
+                        Log.i(TAG, "Error: $message")
+                    }
                 }
             }
         }
