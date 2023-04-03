@@ -6,23 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
-import com.cailloutr.rightnews.R
 import com.cailloutr.rightnews.databinding.FragmentNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
-import com.cailloutr.rightnews.extensions.collectLatestLifecycleFlow
-import com.cailloutr.rightnews.extensions.hide
-import com.cailloutr.rightnews.extensions.show
-import com.cailloutr.rightnews.extensions.snackbar
+import com.cailloutr.rightnews.extensions.*
 import com.cailloutr.rightnews.other.Status
 import com.cailloutr.rightnews.recyclerview.BannerAdapter
 import com.cailloutr.rightnews.ui.CustomItemAnimator
 import com.cailloutr.rightnews.ui.chip.ChipItem
 import com.cailloutr.rightnews.ui.chip.toChip
 import com.cailloutr.rightnews.ui.viewmodel.NewsViewModel
+import com.cailloutr.rightnews.ui.viewmodel.UiStateViewModel
+import com.cailloutr.rightnews.ui.viewmodel.VisualComponents
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "NewsFragment"
@@ -34,6 +31,7 @@ class NewsFragment : Fragment() {
     val binding get() = _binding!!
 
     private val viewModel: NewsViewModel by viewModels()
+    private val uiStateViewModel: UiStateViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +44,8 @@ class NewsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
+        uiStateViewModel.hasComponents = VisualComponents(bottomNavigation = true)
+        setupToolbar(binding.toolbar)
 
         val bannerAdapter = BannerAdapter(ItemNewsType.BANNER) {}
 
@@ -121,6 +120,12 @@ class NewsFragment : Fragment() {
             viewModel.fetchDataFromApi()
         }
 
+        binding.fragmentNewsSeeAll.setOnClickListener {
+            findNavController().navigate(
+                NewsFragmentDirections.actionNewsFragmentToLatestNewsFragment()
+            )
+        }
+
     }
 
     private fun setupSectionsChipItems() {
@@ -145,7 +150,7 @@ class NewsFragment : Fragment() {
         }
     }
 
-    private fun setupToolbar() {
+/*    private fun setupToolbar() {
         val navController = findNavController()
         val appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -158,7 +163,7 @@ class NewsFragment : Fragment() {
         binding.toolbar.apply {
             setupWithNavController(navController, appBarConfiguration)
         }
-    }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_refresh_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.newsfragment.NewsFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.newsfragment.NewsFragment">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -62,7 +62,7 @@
                 app:layout_constraintTop_toBottomOf="@id/search_bar_layout" />
 
             <TextView
-                android:id="@+id/fragment_news_see_more"
+                android:id="@+id/fragment_news_see_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/default_margin"
@@ -72,6 +72,7 @@
                 android:text="@string/fragment_news_see_all"
                 android:textAppearance="@style/TextAppearance.RightNews.Subtitle2"
                 android:textColor="?attr/colorSecondaryVariant"
+                android:background="?attr/selectableItemBackground"
                 app:drawableEndCompat="@drawable/ic_arrow_forward_24"
                 app:drawableTint="?attr/colorSecondaryVariant"
                 app:layout_constraintBaseline_toBaselineOf="@id/latest_news_label"
