@@ -81,6 +81,7 @@ class NewsFragment : Fragment() {
                         binding.bannersViewPager.show()
                         bannerAdapter.submitList(newContainer.results)
                     }
+
                 }
                 Status.ERROR -> {
                     it.message?.let { message ->

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
 import com.cailloutr.rightnews.databinding.FragmentNewsDetailsBinding
@@ -55,6 +56,14 @@ class NewsDetailsFragment : Fragment() {
                 headline.text = it.webTitle
                 content.text = Html.fromHtml(it.body, Html.FROM_HTML_MODE_COMPACT) ?: ""
             }
+        }
+
+        binding.back.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        binding.addFavorite.setOnClickListener {
+            //TODO()
         }
     }
 

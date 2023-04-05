@@ -21,4 +21,6 @@
     <dimen name="news_detail_card_width">300dp</dimen>
     <dimen name="news_detail_card_height">130dp</dimen>
     <dimen name="news_detail_card_half_height">86dp</dimen>
+    <dimen name="small_padding">8dp</dimen>
+    <dimen name="fragment_news_details_image_height">350dp</dimen>
 </resources>
