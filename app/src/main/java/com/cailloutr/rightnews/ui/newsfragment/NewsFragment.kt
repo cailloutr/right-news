@@ -52,7 +52,11 @@ class NewsFragment : Fragment() {
         binding.bannersViewPager.adapter = bannerAdapter
         binding.bannerDots.attachTo(binding.bannersViewPager)
 
-        val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {}
+        val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {
+            findNavController().navigate(
+                NewsFragmentDirections.actionNewsFragmentToNewsDetailsFragment(it)
+            )
+        }
         binding.newsRecyclerView.adapter = newsAdapter
         binding.newsRecyclerView.itemAnimator = CustomItemAnimator()
 
@@ -149,21 +153,6 @@ class NewsFragment : Fragment() {
             }
         }
     }
-
-/*    private fun setupToolbar() {
-        val navController = findNavController()
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.newsFragment,
-                R.id.favoritesFragment,
-                R.id.profileFragment
-            )
-        )
-
-        binding.toolbar.apply {
-            setupWithNavController(navController, appBarConfiguration)
-        }
-    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

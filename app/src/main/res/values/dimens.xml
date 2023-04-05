@@ -6,9 +6,11 @@
     <dimen name="small_margin">8dp</dimen>
     <dimen name="extra_small_padding">2dp</dimen>
     <dimen name="card_view_default_elevation">4dp</dimen>
+    <dimen name="card_view_high_elevation">8dp</dimen>
     <dimen name="banner_constraint_vertical_guideline">300dp</dimen>
     <dimen name="view_pager_banner_height">250dp</dimen>
     <dimen name="card_default_corner_radius">16dp</dimen>
+    <dimen name="card_large_corner_radius">22dp</dimen>
     <dimen name="very_small_margin">4dp</dimen>
     <dimen name="new_item_height">150dp</dimen>
     <dimen name="dots_corner_radius">8dp</dimen>
@@ -16,4 +18,7 @@
     <dimen name="dots_spacing">4dp</dimen>
     <dimen name="placeholder_large">200dp</dimen>
     <dimen name="placeholder_medium">100dp</dimen>
+    <dimen name="news_detail_card_width">300dp</dimen>
+    <dimen name="news_detail_card_height">130dp</dimen>
+    <dimen name="news_detail_card_half_height">86dp</dimen>
 </resources>

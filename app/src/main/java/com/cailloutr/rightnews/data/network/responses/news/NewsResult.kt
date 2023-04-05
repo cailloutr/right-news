@@ -31,5 +31,6 @@ fun NewsResult.toNews() = News(
     pillarName = pillarName,
     trailText = fields.trailText,
     thumbnail = fields.thumbnail,
-    headline = fields.headline
+    headline = fields.headline,
+    body = fields.body,
 )

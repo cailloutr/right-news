@@ -7,6 +7,20 @@
         <item name="subtitleTextAppearance">@style/TextAppearance.RightNews.Subtitle1</item>
     </style>
 
+    <style name="Widget.RightNews.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
+        <item name="titleTextAppearance">@style/TextAppearance.RightNews.Headline6</item>
+        <item name="subtitleTextAppearance">@style/TextAppearance.RightNews.Subtitle1</item>
+    </style>
+
+    <style name="Widget.RightNews.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.RightNews.FloatingActionButton</item>
+    </style>
+
+    <style name="ThemeOverlay.RightNews.FloatingActionButton" parent="">
+        <item name="colorSecondary">@color/color_primary_90</item>
+        <item name="colorOnSecondary">?attr/colorOnPrimary</item>
+    </style>
+
     <style name="Widget.RightNews.Chip" parent="Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/chip_background_selector</item>
         <item name="chipStrokeWidth">1dp</item>

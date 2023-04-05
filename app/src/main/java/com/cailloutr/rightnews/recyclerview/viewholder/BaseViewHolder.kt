@@ -20,7 +20,7 @@ open class BaseViewHolder(
     init {
         itemView.setOnClickListener {
             onClick(news)
-            Log.i(TAG, "Click: ")
+            Log.i(TAG, "Click: $news")
         }
     }
 }

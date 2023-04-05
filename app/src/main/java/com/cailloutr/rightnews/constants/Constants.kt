@@ -14,7 +14,7 @@ import retrofit2.Response
 object Constants {
     const val BASE_URL = "https://content.guardianapis.com/"
 
-    const val API_CALL_FIELDS = "trailText,thumbnail,headline"
+    const val API_CALL_FIELDS = "trailText,thumbnail,headline,body"
 
     const val FIRST_SECTIONS_ID = "games"
 
@@ -41,7 +41,8 @@ object Constants {
                     fields = NewsFields(
                         headline = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps",
                         trailText = "Animal-friendly cosmetics brand Lush is releasing a range of Mario-themed products – so our reporter tried them, for science",
-                        thumbnail = "https://media.guim.co.uk/c6436ebbf6e5eceee60a496698e4fc5004c176db/0_327_2000_1200/500.jpg"
+                        thumbnail = "https://media.guim.co.uk/c6436ebbf6e5eceee60a496698e4fc5004c176db/0_327_2000_1200/500.jpg",
+                        body = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps"
                     ),
                     isHosted = false,
                     pillarId = "pillar/arts",
@@ -59,7 +60,8 @@ object Constants {
                     fields = NewsFields(
                         headline = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps",
                         trailText = "Animal-friendly cosmetics brand Lush is releasing a range of Mario-themed products – so our reporter tried them, for science",
-                        thumbnail = "https://media.guim.co.uk/c6436ebbf6e5eceee60a496698e4fc5004c176db/0_327_2000_1200/500.jpg"
+                        thumbnail = "https://media.guim.co.uk/c6436ebbf6e5eceee60a496698e4fc5004c176db/0_327_2000_1200/500.jpg",
+                        body = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps"
                     ),
                     isHosted = false,
                     pillarId = "pillar/arts",

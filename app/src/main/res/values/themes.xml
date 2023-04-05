@@ -17,6 +17,10 @@
 
         <item name="toolbarStyle">@style/Widget.RightNews.Toolbar</item>
 
+        <item name="appBarLayoutStyle">@style/Widget.RightNews.AppBarLayout</item>
+
+        <item name="floatingActionButtonStyle">@style/Widget.RightNews.FloatingActionButton</item>
+
         <item name="chipStyle">@style/Widget.RightNews.Chip</item>
     </style>
 
