@@ -18,6 +18,8 @@ object Constants {
 
     const val FIRST_SECTIONS_ID = "games"
 
+    const val NETWORK_ERROR_MESSAGE = "Error loading new articles"
+
     val fakeNews = NewsRoot(
         response = NewsResponse(
             status = "ok",

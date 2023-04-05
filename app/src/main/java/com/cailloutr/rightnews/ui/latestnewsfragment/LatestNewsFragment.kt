@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR_MESSAGE
 import com.cailloutr.rightnews.databinding.FragmentLatestNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
 import com.cailloutr.rightnews.extensions.*
@@ -78,8 +79,8 @@ class LatestNewsFragment : Fragment() {
                 }
                 Status.ERROR -> {
                     result.message?.let { message ->
-                        binding.root.snackbar(message)
-                        Log.i(TAG, "Error: $message")
+                        binding.root.snackbar(NETWORK_ERROR_MESSAGE)
+                        Log.e(TAG, "Error: $message")
                     }
                 }
             }
