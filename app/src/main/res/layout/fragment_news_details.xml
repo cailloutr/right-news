@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     app:layoutDescription="@xml/scene"
-    tools:context=".NewsDetailsFragment">
+    tools:context=".ui.newsdetailsfragment.NewsDetailsFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/back_card"

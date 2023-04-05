@@ -50,7 +50,7 @@
     </fragment>
     <fragment
         android:id="@+id/newsDetailsFragment"
-        android:name="com.cailloutr.rightnews.NewsDetailsFragment"
+        android:name="com.cailloutr.rightnews.ui.newsdetailsfragment.NewsDetailsFragment"
         android:label="fragment_news_details"
         tools:layout="@layout/fragment_news_details" >
         <argument

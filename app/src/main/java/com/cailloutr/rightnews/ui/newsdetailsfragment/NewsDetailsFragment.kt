@@ -1,4 +1,4 @@
-package com.cailloutr.rightnews
+package com.cailloutr.rightnews.ui.newsdetailsfragment
 
 import android.os.Build
 import android.os.Bundle
