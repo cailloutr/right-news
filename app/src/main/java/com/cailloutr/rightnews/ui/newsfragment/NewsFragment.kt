@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.cailloutr.rightnews.databinding.FragmentNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
 import com.cailloutr.rightnews.extensions.*
+import com.cailloutr.rightnews.model.News
 import com.cailloutr.rightnews.other.Status
 import com.cailloutr.rightnews.recyclerview.BannerAdapter
 import com.cailloutr.rightnews.ui.CustomItemAnimator
@@ -47,15 +48,15 @@ class NewsFragment : Fragment() {
         uiStateViewModel.hasComponents = VisualComponents(bottomNavigation = true)
         setupToolbar(binding.toolbar)
 
-        val bannerAdapter = BannerAdapter(ItemNewsType.BANNER) {}
+        val bannerAdapter = BannerAdapter(ItemNewsType.BANNER) {
+            navigateToDetailsFragment(it)
+        }
 
         binding.bannersViewPager.adapter = bannerAdapter
         binding.bannerDots.attachTo(binding.bannersViewPager)
 
         val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {
-            findNavController().navigate(
-                NewsFragmentDirections.actionNewsFragmentToNewsDetailsFragment(it)
-            )
+            navigateToDetailsFragment(it)
         }
         binding.newsRecyclerView.adapter = newsAdapter
         binding.newsRecyclerView.itemAnimator = CustomItemAnimator()
@@ -131,6 +132,12 @@ class NewsFragment : Fragment() {
             )
         }
 
+    }
+
+    private fun navigateToDetailsFragment(it: News) {
+        findNavController().navigate(
+            NewsFragmentDirections.actionNewsFragmentToNewsDetailsFragment(it)
+        )
     }
 
     private fun setupSectionsChipItems() {

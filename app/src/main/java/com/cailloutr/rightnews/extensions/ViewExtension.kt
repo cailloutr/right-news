@@ -3,6 +3,7 @@ package com.cailloutr.rightnews.extensions
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.view.View
+import android.view.ViewGroup
 import com.google.android.material.snackbar.Snackbar
 
 fun View.hide() {
@@ -36,3 +37,14 @@ fun View.snackbar(message: String) = Snackbar.make(
     "Error: ${message}",
     Snackbar.LENGTH_SHORT
 ).show()
+
+/**
+ * Update padding in content based In CardView Height
+ * */
+fun View.setupPaddingInView(parent: ViewGroup, target: View) {
+    val viewTreeObserver = parent.viewTreeObserver
+    viewTreeObserver.addOnGlobalLayoutListener {
+        val height = target.measuredHeight
+        this.setPadding(0, height / 2 + 30, 0, 0)
+    }
+}

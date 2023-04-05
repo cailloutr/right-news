@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
 import com.cailloutr.rightnews.databinding.FragmentNewsDetailsBinding
+import com.cailloutr.rightnews.extensions.setupPaddingInView
 import com.cailloutr.rightnews.ui.viewmodel.UiStateViewModel
 import com.cailloutr.rightnews.ui.viewmodel.VisualComponents
 import com.cailloutr.rightnews.util.DateUtil
@@ -58,6 +59,13 @@ class NewsDetailsFragment : Fragment() {
             }
         }
 
+
+        binding.content.setupPaddingInView(
+            binding.fragmentNewsDetailsContainer,
+            binding.fragmentNewsDetailsCard
+        )
+
+
         binding.back.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -66,6 +74,7 @@ class NewsDetailsFragment : Fragment() {
             //TODO()
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

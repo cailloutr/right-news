@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.cailloutr.rightnews.databinding.FragmentLatestNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
 import com.cailloutr.rightnews.extensions.*
+import com.cailloutr.rightnews.model.News
 import com.cailloutr.rightnews.other.Status
 import com.cailloutr.rightnews.recyclerview.BannerAdapter
 import com.cailloutr.rightnews.ui.CustomItemAnimator
@@ -49,7 +51,9 @@ class LatestNewsFragment : Fragment() {
         uiStateViewModel.hasComponents = VisualComponents()
         setupToolbar(binding.toolbar)
 
-        val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {}
+        val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {
+            navigateToNewsDetailsFragment(it)
+        }
         binding.latestNewsRecyclerview.adapter = newsAdapter
         binding.latestNewsRecyclerview.itemAnimator = CustomItemAnimator()
 
@@ -85,6 +89,12 @@ class LatestNewsFragment : Fragment() {
             latestNewsViewModel.fetchDataFromApi()
         }
 
+    }
+
+    private fun navigateToNewsDetailsFragment(it: News) {
+        findNavController().navigate(
+            LatestNewsFragmentDirections.actionLatestNewsFragmentToNewsDetailsFragment(it)
+        )
     }
 
     override fun onDestroyView() {
