@@ -13,31 +13,6 @@ class GetSectionsUseCase @Inject constructor(
     private val newsRepository: NewsRepositoryInterface,
 ) {
 
-/*    suspend operator fun invoke(
-        sections: List<String>?,
-    ): List<Section> {
-        val filteredSections = mutableListOf<Section>()
-        val allSections = newsRepository.getAllSections()
-
-        if (allSections.status == Status.SUCCESS) {
-            if (sections.isNullOrEmpty() ) {
-                allSections.data?.response?.results?.forEach { sectionResult ->
-                    filteredSections.add(sectionResult.toDefaultSection())
-                }
-                return filteredSections
-            }
-
-            sections.forEach { expectedId ->
-                allSections.data?.response?.results?.forEach { sectionResult ->
-                    if (sectionResult.id == expectedId) {
-                        filteredSections.add(sectionResult.toDefaultSection())
-                    }
-                }
-            }
-        }
-        return filteredSections
-    }*/
-
     suspend operator fun invoke(): Resource<Sections> {
         try {
             val response = newsRepository.getAllSections()

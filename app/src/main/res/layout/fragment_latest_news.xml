@@ -34,7 +34,7 @@
             </com.google.android.material.appbar.AppBarLayout>
 
             <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmer_recyclerview_layout"
+                android:id="@+id/shimmer_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"

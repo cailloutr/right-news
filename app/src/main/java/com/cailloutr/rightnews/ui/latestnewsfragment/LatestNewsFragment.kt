@@ -62,8 +62,8 @@ class LatestNewsFragment : Fragment() {
             when (result.status) {
                 Status.LOADING -> {
                     binding.latestNewsRecyclerview.hide()
-                    binding.shimmerRecyclerviewLayout.show()
-                    binding.shimmerRecyclerviewLayout.startShimmerAnimation()
+                    binding.shimmerLayout.show()
+                    binding.shimmerLayout.startShimmerAnimation()
                 }
                 Status.SUCCESS -> {
                     if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
@@ -71,8 +71,8 @@ class LatestNewsFragment : Fragment() {
 
 
                     result.data?.let { newContainer ->
-                        binding.shimmerRecyclerviewLayout.hide()
-                        binding.shimmerRecyclerviewLayout.startShimmerAnimation()
+                        binding.shimmerLayout.hide()
+                        binding.shimmerLayout.startShimmerAnimation()
                         binding.latestNewsRecyclerview.show()
                         newsAdapter.submitList(newContainer.results)
                     }

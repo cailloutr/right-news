@@ -62,7 +62,7 @@ class NewsFragment : Fragment() {
         binding.newsRecyclerView.adapter = newsAdapter
         binding.newsRecyclerView.itemAnimator = CustomItemAnimator()
 
-//        // Setup Sections Chips
+        // Setup Sections Chips
         setupSectionsChipItems()
 
         // Setup Banner News
@@ -100,16 +100,16 @@ class NewsFragment : Fragment() {
             when (it.status) {
                 Status.LOADING -> {
                     binding.newsRecyclerView.hide()
-                    binding.shimmerRecyclerviewLayout.show()
-                    binding.shimmerRecyclerviewLayout.startShimmerAnimation()
+                    binding.shimmerLayout.show()
+                    binding.shimmerLayout.startShimmerAnimation()
                 }
                 Status.SUCCESS -> {
                     if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
                         false
 
                     it.data?.let { newsList ->
-                        binding.shimmerRecyclerviewLayout.hide()
-                        binding.shimmerRecyclerviewLayout.stopShimmerAnimation()
+                        binding.shimmerLayout.hide()
+                        binding.shimmerLayout.stopShimmerAnimation()
                         binding.newsRecyclerView.show()
                         newsAdapter.submitList(newsList)
                     }
@@ -128,11 +128,25 @@ class NewsFragment : Fragment() {
         }
 
         binding.fragmentNewsSeeAll.setOnClickListener {
-            findNavController().navigate(
-                NewsFragmentDirections.actionNewsFragmentToLatestNewsFragment()
-            )
+            navigateToLatestNewsFragment()
         }
 
+        binding.fragmentNewsAllSections.setOnClickListener {
+            navigateToAllSectionsFragment()
+        }
+
+    }
+
+    private fun navigateToAllSectionsFragment() {
+        findNavController().navigate(
+            NewsFragmentDirections.actionNewsFragmentToAllSectionsFragment()
+        )
+    }
+
+    private fun navigateToLatestNewsFragment() {
+        findNavController().navigate(
+            NewsFragmentDirections.actionNewsFragmentToLatestNewsFragment()
+        )
     }
 
     private fun navigateToDetailsFragment(it: News) {
