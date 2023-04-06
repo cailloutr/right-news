@@ -22,3 +22,24 @@ fun Sections.filter(section: List<String>? = null): Sections {
         listOfSections = filteredSections
     )
 }
+
+fun Sections.toAllSectionsItem(): List<AllSectionsItem> {
+    val initials = listOfSections.map {
+        it.title[0]
+    }
+
+    val list = mutableListOf<AllSectionsItem>()
+
+    initials.toSet().forEach { char ->
+        list.add(
+            AllSectionsItem(
+                index = char.toString(),
+                list = listOfSections.filter {
+                    it.title.startsWith(char, true)
+                }
+            )
+        )
+    }
+
+    return list
+}

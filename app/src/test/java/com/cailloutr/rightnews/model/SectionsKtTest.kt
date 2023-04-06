@@ -1,5 +1,7 @@
 package com.cailloutr.rightnews.model
 
+import com.cailloutr.rightnews.constants.Constants
+import com.cailloutr.rightnews.data.network.responses.sections.toSections
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -42,6 +44,30 @@ class SectionsKtTest {
         val result: Sections = sections.filter(sectionsId)
 
         assertThat(result).isNotEqualTo(sections)
+    }
+
+    @Test
+    fun test_toAllSectionsShouldReturnAMapWithAllInitialsChars() {
+        val sections1: Sections? = Constants.fakeResponseSectionRoot.body()?.response?.toSections()
+        val initials = setOf('A', 'M', 'B')
+        val expectedResult = mutableListOf<AllSectionsItem>()
+
+        initials.forEach { char ->
+            sections1?.listOfSections?.filter {
+                it.title.startsWith(char, true)
+            }?.let {
+                expectedResult.add(
+                    AllSectionsItem(
+                        index = char.toString(),
+                        list = it
+                    )
+                )
+            }
+        }
+
+        val result: List<AllSectionsItem>? = sections1?.toAllSectionsItem()
+
+        assertThat(result).containsExactlyElementsIn(expectedResult)
     }
 
 }

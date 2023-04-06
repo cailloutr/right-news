@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_margin"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/sections_index_A"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:background="@color/shimmer_color"
+        android:textAppearance="@style/TextAppearance.RightNews.Headline6.Bold"
+        android:textColor="?attr/colorPrimary" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            app:chipBackgroundColor="@color/shimmer_color" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            app:chipBackgroundColor="@color/shimmer_color" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            app:chipBackgroundColor="@color/shimmer_color" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            app:chipBackgroundColor="@color/shimmer_color" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+</LinearLayout>
