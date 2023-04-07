@@ -159,6 +159,8 @@ class NewsFragment : Fragment() {
         collectLatestLifecycleFlow(viewModel.sectionsListState) { sections ->
             binding.chipGroup.removeAllViews()
 
+            //TODO: Fix behavior in sections chips when refreshing the page the selected item resets but the content don't
+            //TODO: May use SharedFlow
             val listOfSections = sections.data?.listOfSections
             listOfSections?.size?.let { size ->
                 repeat(size) {
