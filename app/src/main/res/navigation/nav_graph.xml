@@ -54,6 +54,10 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="sectionId"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/newsDetailsFragment"
@@ -66,7 +70,11 @@
     </fragment>
     <fragment
         android:id="@+id/allSectionsFragment"
-        android:name="com.cailloutr.rightnews.ui.AllSectionsFragment"
+        android:name="com.cailloutr.rightnews.ui.allsectionsfragment.AllSectionsFragment"
         android:label="@string/all_sections_fragment"
-        tools:layout="@layout/fragment_all_sections" />
+        tools:layout="@layout/fragment_all_sections" >
+        <action
+            android:id="@+id/action_allSectionsFragment_to_latestNewsFragment"
+            app:destination="@id/latestNewsFragment" />
+    </fragment>
 </navigation>

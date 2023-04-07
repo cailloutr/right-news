@@ -1,4 +1,4 @@
-package com.cailloutr.rightnews.ui
+package com.cailloutr.rightnews.ui.allsectionsfragment
 
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR_MESSAGE
 import com.cailloutr.rightnews.databinding.FragmentAllSectionsBinding
 import com.cailloutr.rightnews.extensions.collectLatestLifecycleFlow
@@ -20,6 +21,7 @@ import com.cailloutr.rightnews.ui.viewmodel.AllSectionsViewModel
 import com.cailloutr.rightnews.ui.viewmodel.UiStateViewModel
 import com.cailloutr.rightnews.ui.viewmodel.VisualComponents
 import dagger.hilt.android.AndroidEntryPoint
+
 
 private const val TAG = "AllSectionsFragment"
 
@@ -50,7 +52,12 @@ class AllSectionsFragment : Fragment() {
         uiStateViewModel.hasComponents = VisualComponents()
         setupToolbar(binding.toolbar)
 
-        val adapter = HeadlineAdapter()
+        val adapter = HeadlineAdapter {
+            findNavController().navigate(
+                AllSectionsFragmentDirections.actionAllSectionsFragmentToLatestNewsFragment(it)
+            )
+        }
+
         binding.sectionsContentRecyclerview.adapter = adapter
 
         collectLatestLifecycleFlow(viewModel.sectionsListState) {

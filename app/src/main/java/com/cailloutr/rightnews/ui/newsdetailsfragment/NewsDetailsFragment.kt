@@ -20,6 +20,7 @@ import com.cailloutr.rightnews.util.DateUtil
 
 //private const val TAG = "NewsDetailsFragment"
 
+//TODO: create placeholders for empty view like text and images
 class NewsDetailsFragment : Fragment() {
 
     private var _binding: FragmentNewsDetailsBinding? = null

@@ -5,9 +5,7 @@ import app.cash.turbine.test
 import com.cailloutr.rightnews.TestCoroutineDispatcher
 import com.cailloutr.rightnews.constants.Constants
 import com.cailloutr.rightnews.data.network.responses.news.toNewsContainer
-import com.cailloutr.rightnews.data.network.responses.news.toNewsList
 import com.cailloutr.rightnews.enums.OrderBy
-import com.cailloutr.rightnews.model.News
 import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.model.Section
 import com.cailloutr.rightnews.model.Sections
@@ -98,8 +96,8 @@ class NewsViewModelTest {
     @Test
     fun test_getNewsBySectionShouldUpdateSectionNewsList() = runTest {
         val sectionId = "article"
-        val response: Resource<List<News>> =
-            Resource.success(data = Constants.fakeNews.response.toNewsList())
+        val response: Resource<NewsContainer> =
+            Resource.success(data = Constants.fakeNews.response.toNewsContainer())
 
         coEvery {
             newsUseCase.getNewsBySectionUseCase(sectionId)

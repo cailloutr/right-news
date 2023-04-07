@@ -111,7 +111,7 @@ class NewsFragment : Fragment() {
                         binding.shimmerLayout.hide()
                         binding.shimmerLayout.stopShimmerAnimation()
                         binding.newsRecyclerView.show()
-                        newsAdapter.submitList(newsList)
+                        newsAdapter.submitList(newsList.results)
                     }
                 }
                 Status.ERROR -> {
@@ -145,7 +145,7 @@ class NewsFragment : Fragment() {
 
     private fun navigateToLatestNewsFragment() {
         findNavController().navigate(
-            NewsFragmentDirections.actionNewsFragmentToLatestNewsFragment()
+            NewsFragmentDirections.actionNewsFragmentToLatestNewsFragment(null)
         )
     }
 

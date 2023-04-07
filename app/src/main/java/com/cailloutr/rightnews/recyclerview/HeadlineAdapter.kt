@@ -8,14 +8,17 @@ import com.cailloutr.rightnews.databinding.SectionsContentItemBinding
 import com.cailloutr.rightnews.model.AllSectionsItem
 import com.cailloutr.rightnews.recyclerview.viewholder.HeadlineViewHolder
 
-class HeadlineAdapter : ListAdapter<AllSectionsItem, HeadlineViewHolder>(DiffCallback) {
+class HeadlineAdapter(
+    private val onClick: (String) -> Unit
+) : ListAdapter<AllSectionsItem, HeadlineViewHolder>(DiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeadlineViewHolder {
         return HeadlineViewHolder(
             SectionsContentItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            onClick = onClick
         )
     }
 

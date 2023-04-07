@@ -8,7 +8,8 @@ import com.cailloutr.rightnews.model.Section
 import com.cailloutr.rightnews.recyclerview.viewholder.SectionsContentViewHolder
 
 class SectionsContentAdapter(
-    private val list: List<Section>
+    private val list: List<Section>,
+    private val onClick: (String) -> Unit
 ) : Adapter<SectionsContentViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionsContentViewHolder {
         return SectionsContentViewHolder(
@@ -18,7 +19,8 @@ class SectionsContentAdapter(
                 ),
                 parent,
                 false
-            )
+            ),
+            onclick = onClick
         )
     }
 

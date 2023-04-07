@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.cailloutr.rightnews.constants.Constants
 import com.cailloutr.rightnews.constants.Constants.FIRST_SECTIONS_ID
 import com.cailloutr.rightnews.enums.OrderBy
-import com.cailloutr.rightnews.model.News
 import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.model.Sections
 import com.cailloutr.rightnews.model.filter
@@ -34,8 +33,8 @@ class NewsViewModel @Inject constructor(
     val latestNewsState: StateFlow<Resource<NewsContainer>> = _latestNewsState.asStateFlow()
 
     private val _sectionNewsState =
-        MutableStateFlow<Resource<List<News>>>(Resource.loading(data = null))
-    val sectionsNewsState: StateFlow<Resource<List<News>>> = _sectionNewsState.asStateFlow()
+        MutableStateFlow<Resource<NewsContainer>>(Resource.loading(data = null))
+    val sectionsNewsState: StateFlow<Resource<NewsContainer>> = _sectionNewsState.asStateFlow()
 
     private val _selectedSectionState = MutableStateFlow(FIRST_SECTIONS_ID)
     val selectedSectionsState: StateFlow<String> = _selectedSectionState.asStateFlow()

@@ -1,7 +1,7 @@
 package com.cailloutr.rightnews.usecases
 
-import com.cailloutr.rightnews.data.network.responses.news.toNewsList
-import com.cailloutr.rightnews.model.News
+import com.cailloutr.rightnews.data.network.responses.news.toNewsContainer
+import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.other.Resource
 import com.cailloutr.rightnews.repository.NewsRepositoryInterface
 
@@ -11,12 +11,12 @@ class GetNewsBySectionUseCase(
 
     suspend operator fun invoke(
         section: String,
-    ): Resource<List<News>> {
+    ): Resource<NewsContainer> {
         try {
             val response = repository.getNewsBySection(section)
 
             if (response.isSuccessful) {
-                return Resource.success(data = response.body()?.response?.toNewsList())
+                return Resource.success(data = response.body()?.response?.toNewsContainer())
             }
             return Resource.error(msg = response.message(), data = null)
         } catch (e: Exception) {

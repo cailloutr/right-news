@@ -19,5 +19,6 @@
     <string name="fragment_news_details_fab_ct">Add news to favorite</string>
     <string name="navigate_back_button_ct">Navigate back button</string>
     <string name="all_sections_fragment">All Sections</string>
+    <string name="no_results_found">No results found</string>
 
 </resources>

@@ -8,6 +8,7 @@ import com.cailloutr.rightnews.recyclerview.SectionsContentAdapter
 
 class HeadlineViewHolder(
     private val binding: SectionsContentItemBinding,
+    private val onClick: (String) -> Unit
 ) : ViewHolder(binding.root) {
 
     private lateinit var section: AllSectionsItem
@@ -15,7 +16,10 @@ class HeadlineViewHolder(
     fun bind(section: AllSectionsItem) {
         binding.sectionsIndex.text = section.index
 
-        val adapter = SectionsContentAdapter(section.list)
+        val adapter = SectionsContentAdapter(section.list) {
+            onClick(it)
+        }
+
         binding.sectionsRecyclerview.adapter = adapter
         val spanCount = when (section.list.size) {
             in 1..4 -> {

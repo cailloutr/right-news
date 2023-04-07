@@ -1,6 +1,5 @@
 package com.cailloutr.rightnews.recyclerview.viewholder
 
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.cailloutr.rightnews.R
@@ -12,6 +11,7 @@ import com.google.android.material.chip.Chip
 
 class SectionsContentViewHolder(
     private val binding: ChipItemBinding,
+    onclick: (String) -> Unit
 ) : ViewHolder(binding.root) {
 
     private lateinit var section: Section
@@ -23,7 +23,7 @@ class SectionsContentViewHolder(
             } else {
                 it.animateScale()
             }
-            Toast.makeText(itemView.context, "Click", Toast.LENGTH_SHORT).show()
+            onclick(section.title)
         }
     }
 

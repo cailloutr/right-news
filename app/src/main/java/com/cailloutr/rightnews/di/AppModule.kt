@@ -1,4 +1,4 @@
-package com.cailloutr.rightnews.data.network.di
+package com.cailloutr.rightnews.di
 
 import com.cailloutr.rightnews.BuildConfig
 import com.cailloutr.rightnews.constants.Constants

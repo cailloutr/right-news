@@ -1,18 +1,17 @@
 package com.cailloutr.rightnews.usecases
 
-import com.cailloutr.rightnews.constants.Constants
-import com.cailloutr.rightnews.data.network.responses.news.toNewsContainer
-import com.cailloutr.rightnews.other.Status
 import com.cailloutr.rightnews.repository.FakeNewsRepository
 import com.cailloutr.rightnews.repository.NewsRepositoryInterface
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.*
+
 import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class GetRecentNewsUseCaseTest {
+class GetNewsBySectionUseCaseTest {
 
     private lateinit var newsRepository: NewsRepositoryInterface
     private lateinit var userCase: GetNewsBySectionUseCase
@@ -24,13 +23,17 @@ class GetRecentNewsUseCaseTest {
     }
 
     @Test
-    fun `when invoke() called should return a Resource of NewsContainer`() =
+    fun `when invoke() called with a section string should return only news of that section`() =
         runTest {
             val section = "news"
 
             val result = userCase(section)
 
-            assertThat(result.status).isEqualTo(Status.SUCCESS)
-            assertThat(result.data).isEqualTo(Constants.fakeNews.response.toNewsContainer())
+            Truth.assertThat(result.data?.results).isNotEmpty()
+            result.data?.results?.filter {
+                it.sectionId == section
+            }?.forEach { news ->
+                Truth.assertThat(news.sectionId).isEqualTo(section)
+            }
         }
 }

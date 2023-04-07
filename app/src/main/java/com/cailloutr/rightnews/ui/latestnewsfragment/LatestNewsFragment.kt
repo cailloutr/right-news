@@ -9,9 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.cailloutr.rightnews.constants.Constants
 import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR_MESSAGE
 import com.cailloutr.rightnews.databinding.FragmentLatestNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
+import com.cailloutr.rightnews.enums.OrderBy
 import com.cailloutr.rightnews.extensions.*
 import com.cailloutr.rightnews.model.News
 import com.cailloutr.rightnews.other.Status
@@ -30,9 +33,12 @@ class LatestNewsFragment : Fragment() {
     private var _binding: FragmentLatestNewsBinding? = null
     val binding get() = _binding!!
 
+    private val args: LatestNewsFragmentArgs by navArgs()
 
     private val latestNewsViewModel: LatestNewsViewModel by viewModels()
     private val uiStateViewModel: UiStateViewModel by activityViewModels()
+
+    private lateinit var refreshNews: () -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +58,16 @@ class LatestNewsFragment : Fragment() {
         uiStateViewModel.hasComponents = VisualComponents()
         setupToolbar(binding.toolbar)
 
+        if (args.sectionId != null) {
+            binding.toolbar.title = args.sectionId
+            latestNewsViewModel.getNewsOfSection(args.sectionId!!.lowercase())
+            refreshNews = { latestNewsViewModel.getNewsOfSection(args.sectionId!!.lowercase()) }
+        } else {
+            latestNewsViewModel.getLatestNews(OrderBy.NEWEST, Constants.API_CALL_FIELDS)
+            refreshNews = { latestNewsViewModel.getLatestNews(OrderBy.NEWEST, Constants.API_CALL_FIELDS) }
+        }
+
+
         val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {
             navigateToNewsDetailsFragment(it)
         }
@@ -62,6 +78,7 @@ class LatestNewsFragment : Fragment() {
             when (result.status) {
                 Status.LOADING -> {
                     binding.latestNewsRecyclerview.hide()
+                    binding.notFoundContainer.hide()
                     binding.shimmerLayout.show()
                     binding.shimmerLayout.startShimmerAnimation()
                 }
@@ -69,12 +86,15 @@ class LatestNewsFragment : Fragment() {
                     if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
                         false
 
-
                     result.data?.let { newContainer ->
                         binding.shimmerLayout.hide()
                         binding.shimmerLayout.startShimmerAnimation()
-                        binding.latestNewsRecyclerview.show()
-                        newsAdapter.submitList(newContainer.results)
+                        if (newContainer.results.isEmpty()) {
+                            binding.notFoundContainer.show()
+                        } else {
+                            binding.latestNewsRecyclerview.show()
+                            newsAdapter.submitList(newContainer.results)
+                        }
                     }
                 }
                 Status.ERROR -> {
@@ -87,7 +107,7 @@ class LatestNewsFragment : Fragment() {
         }
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            latestNewsViewModel.fetchDataFromApi()
+            refreshNews()
         }
 
     }

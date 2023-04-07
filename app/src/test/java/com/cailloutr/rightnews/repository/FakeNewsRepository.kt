@@ -8,7 +8,7 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response
 
 class FakeNewsRepository(
-    private var shouldReturnError: Boolean = false
+    private var shouldReturnError: Boolean = false,
 ) : NewsRepositoryInterface {
 
 
@@ -29,6 +29,6 @@ class FakeNewsRepository(
         orderBy: OrderBy,
         fields: String,
     ): Response<NewsRoot> {
-        TODO("Not yet implemented")
+        return Response.success(Constants.fakeNews)
     }
 }

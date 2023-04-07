@@ -7,7 +7,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.latestnewsfragment.LatestNewsFragment">
 
+
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/fragment_latest_news_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -37,6 +39,7 @@
                 android:id="@+id/shimmer_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -69,6 +72,36 @@
                 android:visibility="gone"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/categorized_news_item" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/not_found_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/not_found_image"
+                    android:layout_width="185dp"
+                    android:layout_height="185dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_no_results_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.25"
+                    app:tint="?attr/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/not_found_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_results_found"
+                    android:textAppearance="@style/TextAppearance.RightNews.Headline6"
+                    app:layout_constraintEnd_toEndOf="@id/not_found_image"
+                    app:layout_constraintStart_toStartOf="@id/not_found_image"
+                    app:layout_constraintTop_toBottomOf="@id/not_found_image" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

@@ -2,7 +2,6 @@ package com.cailloutr.rightnews.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cailloutr.rightnews.constants.Constants.API_CALL_FIELDS
 import com.cailloutr.rightnews.enums.OrderBy
 import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.other.DispatchersProvider
@@ -25,18 +24,18 @@ class LatestNewsViewModel @Inject constructor(
         MutableStateFlow<Resource<NewsContainer>>(Resource.loading(data = null))
     val latestNewsState: StateFlow<Resource<NewsContainer>> = _latestNewsState.asStateFlow()
 
-    init {
-        fetchDataFromApi()
-    }
-
-    fun fetchDataFromApi() {
-        getLatestNews(OrderBy.NEWEST, API_CALL_FIELDS)
-    }
 
     fun getLatestNews(orderBy: OrderBy, fields: String) {
         _latestNewsState.value = Resource.loading(data = null)
         viewModelScope.launch(dispatchers.main) {
             _latestNewsState.value = newsUseCases.getRecentNewsUseCase(orderBy, fields)
+        }
+    }
+
+    fun getNewsOfSection(section: String) {
+        _latestNewsState.value = Resource.loading(data = null)
+        viewModelScope.launch {
+            _latestNewsState.value = newsUseCases.getNewsBySectionUseCase(section)
         }
     }
 

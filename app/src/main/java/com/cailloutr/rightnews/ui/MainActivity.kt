@@ -39,8 +39,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun showUiStateComponents() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            title = destination.label
-
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     uiStateViewModel.components.collect {
