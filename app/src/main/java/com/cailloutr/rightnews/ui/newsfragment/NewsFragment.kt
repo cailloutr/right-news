@@ -156,27 +156,28 @@ class NewsFragment : Fragment() {
     }
 
     private fun setupSectionsChipItems() {
-        collectLatestLifecycleFlow(viewModel.sectionsListState) { sections ->
-            binding.chipGroup.removeAllViews()
-
-            //TODO: Fix behavior in sections chips when refreshing the page the selected item resets but the content don't
-            //TODO: May use SharedFlow
-            val listOfSections = sections.data?.listOfSections
-            listOfSections?.size?.let { size ->
-                repeat(size) {
-                    val isChecked = it == 0
-                    val chip = ChipItem(
-                        id = listOfSections[it].id,
-                        text = listOfSections[it].title,
-                        isChecked = isChecked
-                    ) { id ->
-                        viewModel.setSelectedSections(id)
-                        viewModel.getNewsBySection()
+        collectLatestLifecycleFlow(viewModel.selectedSectionsState) { selectedSection ->
+            collectLatestLifecycleFlow(viewModel.sectionsListState) { sections ->
+                binding.chipGroup.removeAllViews()
+                
+                val listOfSections = sections.data?.listOfSections
+                listOfSections?.size?.let { size ->
+                    repeat(size) {
+                        val isChecked = listOfSections[it].id == selectedSection
+                        val chip = ChipItem(
+                            id = listOfSections[it].id,
+                            text = listOfSections[it].title,
+                            isChecked = isChecked
+                        ) { id ->
+                            viewModel.setSelectedSections(id)
+                            viewModel.getNewsBySection()
+                        }
+                        binding.chipGroup.addView(chip.toChip(requireContext(), binding.chipGroup))
                     }
-                    binding.chipGroup.addView(chip.toChip(requireContext(), binding.chipGroup))
                 }
             }
         }
+
     }
 
     override fun onDestroyView() {
