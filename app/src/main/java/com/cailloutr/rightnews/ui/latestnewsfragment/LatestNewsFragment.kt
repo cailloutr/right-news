@@ -10,7 +10,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.cailloutr.rightnews.constants.Constants
+import com.cailloutr.rightnews.constants.Constants.API_CALL_FIELDS
+import com.cailloutr.rightnews.constants.Constants.INITIAL_PAGE
 import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR_MESSAGE
 import com.cailloutr.rightnews.databinding.FragmentLatestNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
@@ -65,8 +66,9 @@ class LatestNewsFragment : Fragment() {
             latestNewsViewModel.getNewsOfSection(args.sectionId!!.lowercase())
             refreshNews = { latestNewsViewModel.getNewsOfSection(args.sectionId!!.lowercase()) }
         } else {
-            latestNewsViewModel.getLatestNews(OrderBy.NEWEST, Constants.API_CALL_FIELDS)
-            refreshNews = { latestNewsViewModel.getLatestNews(OrderBy.NEWEST, Constants.API_CALL_FIELDS) }
+            latestNewsViewModel.getLatestNews(OrderBy.NEWEST, API_CALL_FIELDS, INITIAL_PAGE)
+            refreshNews =
+                { latestNewsViewModel.getLatestNews(OrderBy.NEWEST, API_CALL_FIELDS, INITIAL_PAGE) }
         }
 
 

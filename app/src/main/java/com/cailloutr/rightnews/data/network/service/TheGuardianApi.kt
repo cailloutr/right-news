@@ -26,7 +26,8 @@ interface TheGuardianApi {
     suspend fun getNewsOrderedByDate(
         @Query("api-key") apiKey: String = BuildConfig.API_KEY,
         @Query("order-by") orderBy: String,
-        @Query("show-fields") showFields: String = Constants.API_CALL_FIELDS
+        @Query("show-fields") showFields: String = Constants.API_CALL_FIELDS,
+        @Query("page") page: Int = Constants.INITIAL_PAGE
     ): Response<NewsRoot>
 
     @GET("/search?")

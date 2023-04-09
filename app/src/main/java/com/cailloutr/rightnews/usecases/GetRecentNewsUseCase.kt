@@ -14,11 +14,13 @@ class GetRecentNewsUseCase @Inject constructor(
     suspend operator fun invoke(
         orderBy: OrderBy,
         fields: String,
+        page: Int
     ): Resource<NewsContainer> {
         try {
             val result = repository.getNewsOrderedByDate(
                 orderBy = orderBy,
-                fields = fields
+                fields = fields,
+                page = page
             )
             if (result.isSuccessful) {
                 return Resource.success(data = result.body()?.response?.toNewsContainer())

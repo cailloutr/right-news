@@ -22,6 +22,10 @@ object Constants {
 
     const val SEARCH_QUERY = "home"
 
+    const val INITIAL_PAGE = 1
+
+    const val PAGE_SIZE = 15
+
     val fakeNews = NewsRoot(
         response = NewsResponse(
             status = "ok",

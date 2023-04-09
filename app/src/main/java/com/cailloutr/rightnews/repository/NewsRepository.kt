@@ -23,10 +23,12 @@ class NewsRepository @Inject constructor(
     override suspend fun getNewsOrderedByDate(
         orderBy: OrderBy,
         fields: String,
+        page: Int
     ): Response<NewsRoot> =
         theGuardianApi.getNewsOrderedByDate(
             orderBy = orderBy,
-            fields = fields
+            fields = fields,
+            page = page
         )
 
     override suspend fun searchNews(

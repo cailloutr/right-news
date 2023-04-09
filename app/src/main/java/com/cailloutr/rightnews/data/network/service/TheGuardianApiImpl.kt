@@ -21,10 +21,12 @@ class TheGuardianApiImpl @Inject constructor(
     override suspend fun getNewsOrderedByDate(
         orderBy: OrderBy,
         fields: String,
+        page: Int
     ): Response<NewsRoot> {
         return theGuardianApi.getNewsOrderedByDate(
             orderBy = orderBy.value,
-            showFields = fields
+            showFields = fields,
+            page = page
         )
     }
 

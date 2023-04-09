@@ -17,6 +17,7 @@ interface TheGuardianApiHelper {
     suspend fun getNewsOrderedByDate(
         orderBy: OrderBy,
         fields: String,
+        page: Int
     ): Response<NewsRoot>
 
     suspend fun searchNews(
