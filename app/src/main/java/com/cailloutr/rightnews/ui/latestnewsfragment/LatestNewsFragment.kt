@@ -17,6 +17,8 @@ import com.cailloutr.rightnews.enums.ItemNewsType
 import com.cailloutr.rightnews.enums.OrderBy
 import com.cailloutr.rightnews.extensions.*
 import com.cailloutr.rightnews.model.News
+import com.cailloutr.rightnews.model.NewsContainer
+import com.cailloutr.rightnews.other.Resource
 import com.cailloutr.rightnews.other.Status
 import com.cailloutr.rightnews.recyclerview.BannerAdapter
 import com.cailloutr.rightnews.ui.CustomItemAnimator
@@ -68,17 +70,13 @@ class LatestNewsFragment : Fragment() {
         }
 
 
-        val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {
-            navigateToNewsDetailsFragment(it)
-        }
-        binding.latestNewsRecyclerview.adapter = newsAdapter
-        binding.latestNewsRecyclerview.itemAnimator = CustomItemAnimator()
+        val newsAdapter = setupAdapter()
 
         collectLatestLifecycleFlow(latestNewsViewModel.latestNewsState) { result ->
             when (result.status) {
                 Status.LOADING -> {
                     binding.latestNewsRecyclerview.hide()
-                    binding.notFoundContainer.hide()
+                    binding.placeholderContainer.hide()
                     binding.shimmerLayout.show()
                     binding.shimmerLayout.startShimmerAnimation()
                 }
@@ -88,20 +86,19 @@ class LatestNewsFragment : Fragment() {
 
                     result.data?.let { newContainer ->
                         binding.shimmerLayout.hide()
-                        binding.shimmerLayout.startShimmerAnimation()
-                        if (newContainer.results.isEmpty()) {
-                            binding.notFoundContainer.show()
+                        binding.shimmerLayout.stopShimmerAnimation()
+
+                        val newsContainerResult = newContainer.results
+                        if (newsContainerResult.isEmpty()) {
+                            binding.placeholderContainer.show()
                         } else {
                             binding.latestNewsRecyclerview.show()
-                            newsAdapter.submitList(newContainer.results)
+                            newsAdapter.submitList(newsContainerResult)
                         }
                     }
                 }
                 Status.ERROR -> {
-                    result.message?.let { message ->
-                        binding.root.snackbar(NETWORK_ERROR_MESSAGE)
-                        Log.e(TAG, "Error: $message")
-                    }
+                    showErrorMessage(result)
                 }
             }
         }
@@ -110,6 +107,22 @@ class LatestNewsFragment : Fragment() {
             refreshNews()
         }
 
+    }
+
+    private fun showErrorMessage(result: Resource<NewsContainer>) {
+        result.message?.let { message ->
+            binding.root.snackbar(NETWORK_ERROR_MESSAGE)
+            Log.e(TAG, "Error: $message")
+        }
+    }
+
+    private fun setupAdapter(): BannerAdapter {
+        val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {
+            navigateToNewsDetailsFragment(it)
+        }
+        binding.latestNewsRecyclerview.adapter = newsAdapter
+        binding.latestNewsRecyclerview.itemAnimator = CustomItemAnimator()
+        return newsAdapter
     }
 
     private fun navigateToNewsDetailsFragment(it: News) {

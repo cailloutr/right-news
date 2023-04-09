@@ -34,7 +34,7 @@ class LatestNewsViewModel @Inject constructor(
 
     fun getNewsOfSection(section: String) {
         _latestNewsState.value = Resource.loading(data = null)
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.main) {
             _latestNewsState.value = newsUseCases.getNewsBySectionUseCase(section)
         }
     }

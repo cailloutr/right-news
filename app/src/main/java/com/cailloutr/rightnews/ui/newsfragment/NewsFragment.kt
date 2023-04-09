@@ -14,6 +14,8 @@ import com.cailloutr.rightnews.databinding.FragmentNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
 import com.cailloutr.rightnews.extensions.*
 import com.cailloutr.rightnews.model.News
+import com.cailloutr.rightnews.model.NewsContainer
+import com.cailloutr.rightnews.other.Resource
 import com.cailloutr.rightnews.other.Status
 import com.cailloutr.rightnews.recyclerview.BannerAdapter
 import com.cailloutr.rightnews.ui.CustomItemAnimator
@@ -49,23 +51,96 @@ class NewsFragment : Fragment() {
         uiStateViewModel.hasComponents = VisualComponents(bottomNavigation = true)
         setupToolbar(binding.toolbar)
 
+        val bannerAdapter = setupBannerViewPager()
+
+        val newsAdapter = setupNewRecyclerview()
+
+        // Setup Sections Chips
+        setupSectionsChipItems()
+
+        // Setup Banner News
+        setupBannerNews(bannerAdapter)
+
+        // Setup Section's news
+        setupSectionsNews(newsAdapter)
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.fetchDataFromApi()
+        }
+
+        binding.fragmentNewsSeeAll.setOnClickListener {
+            navigateToLatestNewsFragment()
+        }
+
+        binding.fragmentNewsAllSections.setOnClickListener {
+            navigateToAllSectionsFragment()
+        }
+
+
+        binding.searchBarEdittext.setOnClickListener {
+//            Toast.makeText(requireContext(), "Click", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(
+                NewsFragmentDirections.actionNewsFragmentToSearchFragment()
+            )
+        }
+    }
+
+    private fun setupNewRecyclerview(): BannerAdapter {
+        val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {
+            navigateToDetailsFragment(it)
+        }
+        binding.newsRecyclerView.adapter = newsAdapter
+        binding.newsRecyclerView.itemAnimator = CustomItemAnimator()
+        return newsAdapter
+    }
+
+    private fun setupBannerViewPager(): BannerAdapter {
         val bannerAdapter = BannerAdapter(ItemNewsType.BANNER) {
             navigateToDetailsFragment(it)
         }
 
         binding.bannersViewPager.adapter = bannerAdapter
         binding.bannerDots.attachTo(binding.bannersViewPager)
+        return bannerAdapter
+    }
 
-        val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {
-            navigateToDetailsFragment(it)
+    private fun setupSectionsNews(newsAdapter: BannerAdapter) {
+        collectLatestLifecycleFlow(viewModel.sectionsNewsState) {
+            when (it.status) {
+                Status.LOADING -> {
+                    binding.newsRecyclerView.hide()
+                    binding.shimmerLayout.show()
+                    binding.shimmerLayout.startShimmerAnimation()
+                }
+                Status.SUCCESS -> {
+                    if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
+                        false
+
+                    it.data?.let { newsList ->
+                        binding.shimmerLayout.hide()
+                        binding.shimmerLayout.stopShimmerAnimation()
+
+                        if (newsList.results.isNotEmpty()) {
+                            binding.newsRecyclerView.show()
+                            newsAdapter.submitList(newsList.results)
+                        }
+                    }
+                }
+                Status.ERROR -> {
+                    showErrorMessage(it)
+                }
+            }
         }
-        binding.newsRecyclerView.adapter = newsAdapter
-        binding.newsRecyclerView.itemAnimator = CustomItemAnimator()
+    }
 
-        // Setup Sections Chips
-        setupSectionsChipItems()
+    private fun showErrorMessage(it: Resource<NewsContainer>) {
+        it.message?.let { message ->
+            binding.root.snackbar(NETWORK_ERROR_MESSAGE)
+            Log.e(TAG, "Error: $message")
+        }
+    }
 
-        // Setup Banner News
+    private fun setupBannerNews(bannerAdapter: BannerAdapter) {
         collectLatestLifecycleFlow(viewModel.latestNewsState) {
             when (it.status) {
                 Status.LOADING -> {
@@ -86,55 +161,11 @@ class NewsFragment : Fragment() {
 
                 }
                 Status.ERROR -> {
-                    it.message?.let { message ->
-                        binding.root.snackbar(NETWORK_ERROR_MESSAGE)
-                        Log.e(TAG, "Error: $message")
-                    }
+                    showErrorMessage(it)
                 }
             }
 
         }
-
-        // Setup Section's news
-        collectLatestLifecycleFlow(viewModel.sectionsNewsState) {
-            when (it.status) {
-                Status.LOADING -> {
-                    binding.newsRecyclerView.hide()
-                    binding.shimmerLayout.show()
-                    binding.shimmerLayout.startShimmerAnimation()
-                }
-                Status.SUCCESS -> {
-                    if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
-                        false
-
-                    it.data?.let { newsList ->
-                        binding.shimmerLayout.hide()
-                        binding.shimmerLayout.stopShimmerAnimation()
-                        binding.newsRecyclerView.show()
-                        newsAdapter.submitList(newsList.results)
-                    }
-                }
-                Status.ERROR -> {
-                    it.message?.let { message ->
-                        binding.root.snackbar(NETWORK_ERROR_MESSAGE)
-                        Log.e(TAG, "Error: $message")
-                    }
-                }
-            }
-        }
-
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.fetchDataFromApi()
-        }
-
-        binding.fragmentNewsSeeAll.setOnClickListener {
-            navigateToLatestNewsFragment()
-        }
-
-        binding.fragmentNewsAllSections.setOnClickListener {
-            navigateToAllSectionsFragment()
-        }
-
     }
 
     private fun navigateToAllSectionsFragment() {
@@ -159,7 +190,7 @@ class NewsFragment : Fragment() {
         collectLatestLifecycleFlow(viewModel.selectedSectionsState) { selectedSection ->
             collectLatestLifecycleFlow(viewModel.sectionsListState) { sections ->
                 binding.chipGroup.removeAllViews()
-                
+
                 val listOfSections = sections.data?.listOfSections
                 listOfSections?.size?.let { size ->
                     repeat(size) {
@@ -177,7 +208,6 @@ class NewsFragment : Fragment() {
                 }
             }
         }
-
     }
 
     override fun onDestroyView() {
