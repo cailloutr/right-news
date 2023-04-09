@@ -25,6 +25,7 @@ import com.cailloutr.rightnews.ui.viewmodel.NewsViewModel
 import com.cailloutr.rightnews.ui.viewmodel.UiStateViewModel
 import com.cailloutr.rightnews.ui.viewmodel.VisualComponents
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 
 private const val TAG = "NewsFragment"
 
@@ -187,7 +188,27 @@ class NewsFragment : Fragment() {
     }
 
     private fun setupSectionsChipItems() {
-        collectLatestLifecycleFlow(viewModel.selectedSectionsState) { selectedSection ->
+        collectLatestLifecycleFlow(viewModel.sectionsListState) { sections ->
+            binding.chipGroup.removeAllViews()
+
+            val selectedSection = viewModel.selectedSectionsState.first()
+            val listOfSections = sections.data?.listOfSections
+            listOfSections?.size?.let { size ->
+                repeat(size) {
+                    val isChecked = listOfSections[it].id == selectedSection
+                    val chip = ChipItem(
+                        id = listOfSections[it].id,
+                        text = listOfSections[it].title,
+                        isChecked = isChecked
+                    ) { id ->
+                        viewModel.setSelectedSections(id)
+                        viewModel.getNewsBySection()
+                    }
+                    binding.chipGroup.addView(chip.toChip(requireContext(), binding.chipGroup))
+                }
+            }
+        }
+/*        collectLatestLifecycleFlow(viewModel.selectedSectionsState) { selectedSection ->
             collectLatestLifecycleFlow(viewModel.sectionsListState) { sections ->
                 binding.chipGroup.removeAllViews()
 
@@ -207,7 +228,7 @@ class NewsFragment : Fragment() {
                     }
                 }
             }
-        }
+        }*/
     }
 
     override fun onDestroyView() {
