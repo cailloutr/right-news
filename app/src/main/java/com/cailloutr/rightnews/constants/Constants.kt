@@ -20,6 +20,8 @@ object Constants {
 
     const val NETWORK_ERROR_MESSAGE = "Error loading new articles"
 
+    const val SEARCH_QUERY = "home"
+
     val fakeNews = NewsRoot(
         response = NewsResponse(
             status = "ok",
@@ -57,6 +59,59 @@ object Constants {
                     sectionName = "News",
                     webPublicationDate = "2023-03-28T12:15:18Z",
                     webTitle = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps",
+                    webUrl = "https://www.theguardian.com/games/2023/mar/28/super-mario-lush-soaps",
+                    apiUrl = "https://content.guardianapis.com/games/2023/mar/28/super-mario-lush-soaps",
+                    fields = NewsFields(
+                        headline = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps",
+                        trailText = "Animal-friendly cosmetics brand Lush is releasing a range of Mario-themed products – so our reporter tried them, for science",
+                        thumbnail = "https://media.guim.co.uk/c6436ebbf6e5eceee60a496698e4fc5004c176db/0_327_2000_1200/500.jpg",
+                        body = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps"
+                    ),
+                    isHosted = false,
+                    pillarId = "pillar/arts",
+                    pillarName = "Arts"
+                )
+            )
+        )
+    )
+
+    val fakeSearchNews = NewsRoot(
+        response = NewsResponse(
+            status = "ok",
+            userTier = "developer",
+            total = 9526,
+            startIndex = 1,
+            pages = 10,
+            pageSize = 50,
+            currentPage = 1,
+            orderBy = "newest",
+            results = listOf(
+                NewsResult(
+                    id = "games/2023/mar/28/super-mario-lush-soaps",
+                    type = "article",
+                    sectionId = "article",
+                    sectionName = "Games",
+                    webPublicationDate = "2023-03-28T12:15:18Z",
+                    webTitle = "Luigi has sweet $SEARCH_QUERY of apple’: testing out Lush’s unlikely Super Mario soaps",
+                    webUrl = "https://www.theguardian.com/games/2023/mar/28/super-mario-lush-soaps",
+                    apiUrl = "https://content.guardianapis.com/games/2023/mar/28/super-mario-lush-soaps",
+                    fields = NewsFields(
+                        headline = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps",
+                        trailText = "Animal-friendly cosmetics brand Lush is releasing a range of Mario-themed products – so our reporter tried them, for science",
+                        thumbnail = "https://media.guim.co.uk/c6436ebbf6e5eceee60a496698e4fc5004c176db/0_327_2000_1200/500.jpg",
+                        body = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps"
+                    ),
+                    isHosted = false,
+                    pillarId = "pillar/arts",
+                    pillarName = "Arts"
+                ),
+                NewsResult(
+                    id = "games/2023/mar/28/super-mario-lush-soaps",
+                    type = "article",
+                    sectionId = "news",
+                    sectionName = "News",
+                    webPublicationDate = "2023-03-28T12:15:18Z",
+                    webTitle = "Luigi has sweet $SEARCH_QUERY of apple’: testing out Lush’s unlikely Super Mario soaps",
                     webUrl = "https://www.theguardian.com/games/2023/mar/28/super-mario-lush-soaps",
                     apiUrl = "https://content.guardianapis.com/games/2023/mar/28/super-mario-lush-soaps",
                     fields = NewsFields(

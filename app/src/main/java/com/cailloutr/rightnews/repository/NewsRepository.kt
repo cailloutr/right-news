@@ -13,7 +13,7 @@ class NewsRepository @Inject constructor(
     private val theGuardianApi: TheGuardianApiHelper,
 ) : NewsRepositoryInterface {
 
-    override suspend fun getAllSections(): Response<SectionsRoot>  =
+    override suspend fun getAllSections(): Response<SectionsRoot> =
         theGuardianApi.getAllSections()
 
     override suspend fun getNewsBySection(section: String): Response<NewsRoot> =
@@ -25,8 +25,19 @@ class NewsRepository @Inject constructor(
         fields: String,
     ): Response<NewsRoot> =
         theGuardianApi.getNewsOrderedByDate(
-            orderBy,
-            fields
+            orderBy = orderBy,
+            fields = fields
+        )
+
+    override suspend fun searchNews(
+        searchQuery: String,
+        orderBy: OrderBy,
+        fields: String
+    ): Response<NewsRoot> =
+        theGuardianApi.searchNews(
+            searchQuery = searchQuery,
+            orderBy = orderBy,
+            fields = fields
         )
 
 }

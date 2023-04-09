@@ -8,10 +8,7 @@ import com.cailloutr.rightnews.data.network.service.TheGuardianApiImpl
 import com.cailloutr.rightnews.other.DefaultDispatchers
 import com.cailloutr.rightnews.other.DispatchersProvider
 import com.cailloutr.rightnews.repository.NewsRepository
-import com.cailloutr.rightnews.usecases.GetNewsBySectionUseCase
-import com.cailloutr.rightnews.usecases.GetRecentNewsUseCase
-import com.cailloutr.rightnews.usecases.GetSectionsUseCase
-import com.cailloutr.rightnews.usecases.NewsUseCases
+import com.cailloutr.rightnews.usecases.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -68,7 +65,8 @@ object AppModule {
         return NewsUseCases(
             GetSectionsUseCase(repository),
             GetRecentNewsUseCase(repository),
-            GetNewsBySectionUseCase(repository)
+            GetNewsBySectionUseCase(repository),
+            SearchNewsUseCase((repository))
         )
     }
 

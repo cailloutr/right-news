@@ -43,12 +43,16 @@
                 app:startIconDrawable="@drawable/ic_search_24">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search_bar_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:focusable="false"
                     android:hint="@string/search_bar_hint"
                     android:imeActionLabel="@string/search_bar_hint"
                     android:imeOptions="actionSearch"
-                    android:inputType="textCapSentences" />
+                    android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -66,13 +70,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/default_margin"
+                android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:drawablePadding="@dimen/small_margin"
                 android:focusable="true"
                 android:text="@string/fragment_news_see_all"
                 android:textAppearance="@style/TextAppearance.RightNews.Subtitle2"
                 android:textColor="?attr/colorSecondaryVariant"
-                android:background="?attr/selectableItemBackground"
                 app:drawableEndCompat="@drawable/ic_arrow_forward_24"
                 app:drawableTint="?attr/colorSecondaryVariant"
                 app:layout_constraintBaseline_toBaselineOf="@id/latest_news_label"

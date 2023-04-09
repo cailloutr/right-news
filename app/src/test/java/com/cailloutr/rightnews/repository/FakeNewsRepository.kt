@@ -31,4 +31,12 @@ class FakeNewsRepository(
     ): Response<NewsRoot> {
         return Response.success(Constants.fakeNews)
     }
+
+    override suspend fun searchNews(
+        searchQuery: String,
+        orderBy: OrderBy,
+        fields: String
+    ): Response<NewsRoot> {
+        return Response.success(Constants.fakeSearchNews)
+    }
 }

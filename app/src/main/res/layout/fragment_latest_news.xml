@@ -74,13 +74,13 @@
                 tools:listitem="@layout/categorized_news_item" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/not_found_container"
+                android:id="@+id/placeholder_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone">
 
                 <ImageView
-                    android:id="@+id/not_found_image"
+                    android:id="@+id/placeholder_image"
                     android:layout_width="185dp"
                     android:layout_height="185dp"
                     android:importantForAccessibility="no"
@@ -93,14 +93,14 @@
                     app:tint="?attr/colorPrimary" />
 
                 <TextView
-                    android:id="@+id/not_found_text"
+                    android:id="@+id/placeholder_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/no_results_found"
                     android:textAppearance="@style/TextAppearance.RightNews.Headline6"
-                    app:layout_constraintEnd_toEndOf="@id/not_found_image"
-                    app:layout_constraintStart_toStartOf="@id/not_found_image"
-                    app:layout_constraintTop_toBottomOf="@id/not_found_image" />
+                    app:layout_constraintEnd_toEndOf="@id/placeholder_image"
+                    app:layout_constraintStart_toStartOf="@id/placeholder_image"
+                    app:layout_constraintTop_toBottomOf="@id/placeholder_image" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 

@@ -18,4 +18,11 @@ interface NewsRepositoryInterface {
         fields: String = API_CALL_FIELDS,
     ): Response<NewsRoot>
 
+    suspend fun searchNews(
+        searchQuery: String,
+        orderBy: OrderBy = OrderBy.NEWEST,
+        fields: String = API_CALL_FIELDS
+    ): Response<NewsRoot>
+
+
 }

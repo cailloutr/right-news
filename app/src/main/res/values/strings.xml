@@ -20,5 +20,7 @@
     <string name="navigate_back_button_ct">Navigate back button</string>
     <string name="all_sections_fragment">All Sections</string>
     <string name="no_results_found">No results found</string>
+    <string name="search_fragment">Search</string>
+    <string name="search_content">Search content</string>
 
 </resources>

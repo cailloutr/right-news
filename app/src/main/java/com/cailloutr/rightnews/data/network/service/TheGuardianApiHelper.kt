@@ -18,4 +18,10 @@ interface TheGuardianApiHelper {
         orderBy: OrderBy,
         fields: String,
     ): Response<NewsRoot>
+
+    suspend fun searchNews(
+        orderBy: OrderBy,
+        fields: String,
+        searchQuery: String
+    ): Response<NewsRoot>
 }

@@ -22,13 +22,21 @@ interface TheGuardianApi {
         @Query("show-fields") showFields: String = Constants.API_CALL_FIELDS
     ): Response<NewsRoot>
 
-
     @GET("/search?")
     suspend fun getNewsOrderedByDate(
         @Query("api-key") apiKey: String = BuildConfig.API_KEY,
         @Query("order-by") orderBy: String,
         @Query("show-fields") showFields: String = Constants.API_CALL_FIELDS
     ): Response<NewsRoot>
+
+    @GET("/search?")
+    suspend fun searchNews(
+        @Query("api-key") apiKey: String = BuildConfig.API_KEY,
+        @Query("order-by") orderBy: String,
+        @Query("show-fields") showFields: String = Constants.API_CALL_FIELDS,
+        @Query("q") searchQuery: String = ""
+    ): Response<NewsRoot>
+
 
 
 }

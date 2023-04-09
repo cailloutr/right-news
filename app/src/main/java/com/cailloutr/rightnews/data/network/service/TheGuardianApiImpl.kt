@@ -28,4 +28,16 @@ class TheGuardianApiImpl @Inject constructor(
         )
     }
 
+    override suspend fun searchNews(
+        orderBy: OrderBy,
+        fields: String,
+        searchQuery: String
+    ): Response<NewsRoot> {
+        return theGuardianApi.searchNews(
+            orderBy = orderBy.value,
+            showFields = fields,
+            searchQuery = searchQuery
+        )
+    }
+
 }
