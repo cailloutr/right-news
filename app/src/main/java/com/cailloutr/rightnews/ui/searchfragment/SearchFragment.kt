@@ -68,7 +68,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupSearchResult(adapter: BannerAdapter) {
-        collectLatestLifecycleFlow(viewModel.searchResultState) { searchResult ->
+        collectLifecycleFlow(viewModel.searchResultState) { searchResult ->
             when (searchResult?.status) {
                 Status.LOADING -> {
                     showProgressBar()

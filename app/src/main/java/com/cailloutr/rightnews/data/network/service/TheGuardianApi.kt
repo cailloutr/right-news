@@ -27,7 +27,7 @@ interface TheGuardianApi {
         @Query("api-key") apiKey: String = BuildConfig.API_KEY,
         @Query("order-by") orderBy: String,
         @Query("show-fields") showFields: String = Constants.API_CALL_FIELDS,
-        @Query("page") page: Int = Constants.INITIAL_PAGE
+        @Query("page") page: Int = Constants.API_INITIAL_INDEX
     ): Response<NewsRoot>
 
     @GET("/search?")

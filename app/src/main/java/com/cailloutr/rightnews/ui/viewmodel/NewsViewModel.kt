@@ -2,8 +2,10 @@ package com.cailloutr.rightnews.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cailloutr.rightnews.constants.Constants
+import com.cailloutr.rightnews.constants.Constants.API_CALL_FIELDS
+import com.cailloutr.rightnews.constants.Constants.DEFAULT_SECTIONS
 import com.cailloutr.rightnews.constants.Constants.FIRST_SECTIONS_ID
+import com.cailloutr.rightnews.constants.Constants.API_INITIAL_INDEX
 import com.cailloutr.rightnews.enums.OrderBy
 import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.model.Sections
@@ -50,8 +52,8 @@ class NewsViewModel @Inject constructor(
         _latestNewsState.value = Resource.loading(data = null)
         _sectionNewsState.value = Resource.loading(data = null)
 
-        getSectionsFilteredById(Constants.DEFAULT_SECTIONS)
-        getLatestNews(OrderBy.NEWEST, Constants.API_CALL_FIELDS)
+        getSectionsFilteredById(DEFAULT_SECTIONS)
+        getLatestNews(OrderBy.NEWEST, API_CALL_FIELDS, API_INITIAL_INDEX)
         getNewsBySection()
     }
 
@@ -68,12 +70,13 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    fun getLatestNews(orderBy: OrderBy, fields: String) {
+    fun getLatestNews(orderBy: OrderBy, fields: String, page: Int) {
         viewModelScope.launch(dispatchers.main) {
-            _latestNewsState.value = newsUseCases.getRecentNewsUseCase(
-                orderBy,
-                fields
-            )
+//            _latestNewsState.value = newsUseCases.getRecentNewsUseCase(
+//                orderBy,
+//                fields,
+//                page
+//            )
         }
     }
 

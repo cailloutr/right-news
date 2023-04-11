@@ -106,7 +106,7 @@ class NewsFragment : Fragment() {
     }
 
     private fun setupSectionsNews(newsAdapter: BannerAdapter) {
-        collectLatestLifecycleFlow(viewModel.sectionsNewsState) {
+        collectLifecycleFlow(viewModel.sectionsNewsState) {
             when (it.status) {
                 Status.LOADING -> {
                     binding.newsRecyclerView.hide()
@@ -142,7 +142,7 @@ class NewsFragment : Fragment() {
     }
 
     private fun setupBannerNews(bannerAdapter: BannerAdapter) {
-        collectLatestLifecycleFlow(viewModel.latestNewsState) {
+        collectLifecycleFlow(viewModel.latestNewsState) {
             when (it.status) {
                 Status.LOADING -> {
                     binding.bannersViewPager.hide()
@@ -188,7 +188,7 @@ class NewsFragment : Fragment() {
     }
 
     private fun setupSectionsChipItems() {
-        collectLatestLifecycleFlow(viewModel.sectionsListState) { sections ->
+        collectLifecycleFlow(viewModel.sectionsListState) { sections ->
             binding.chipGroup.removeAllViews()
 
             val selectedSection = viewModel.selectedSectionsState.first()

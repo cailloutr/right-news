@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR_MESSAGE
 import com.cailloutr.rightnews.databinding.FragmentAllSectionsBinding
-import com.cailloutr.rightnews.extensions.collectLatestLifecycleFlow
+import com.cailloutr.rightnews.extensions.collectLifecycleFlow
 import com.cailloutr.rightnews.extensions.setupToolbar
 import com.cailloutr.rightnews.extensions.snackbar
 import com.cailloutr.rightnews.model.toAllSectionsItem
@@ -60,7 +60,7 @@ class AllSectionsFragment : Fragment() {
 
         binding.sectionsContentRecyclerview.adapter = adapter
 
-        collectLatestLifecycleFlow(viewModel.sectionsListState) {
+        collectLifecycleFlow(viewModel.sectionsListState) {
             when (it.status) {
                 Status.LOADING -> {
                     binding.sectionsContentRecyclerview.visibility = View.GONE
