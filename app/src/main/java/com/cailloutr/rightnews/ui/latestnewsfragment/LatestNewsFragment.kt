@@ -10,18 +10,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.cailloutr.rightnews.constants.Constants.API_CALL_FIELDS
-import com.cailloutr.rightnews.constants.Constants.INITIAL_PAGE
+import com.cailloutr.rightnews.constants.Constants.LATEST_NEWS
 import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR_MESSAGE
 import com.cailloutr.rightnews.databinding.FragmentLatestNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
-import com.cailloutr.rightnews.enums.OrderBy
 import com.cailloutr.rightnews.extensions.*
-import com.cailloutr.rightnews.model.News
+import com.cailloutr.rightnews.model.Article
 import com.cailloutr.rightnews.model.NewsContainer
+import com.cailloutr.rightnews.model.SectionWrapper
 import com.cailloutr.rightnews.other.Resource
-import com.cailloutr.rightnews.other.Status
-import com.cailloutr.rightnews.recyclerview.BannerAdapter
+import com.cailloutr.rightnews.recyclerview.NewsAdapter
 import com.cailloutr.rightnews.ui.CustomItemAnimator
 import com.cailloutr.rightnews.ui.viewmodel.LatestNewsViewModel
 import com.cailloutr.rightnews.ui.viewmodel.UiStateViewModel
@@ -63,18 +61,73 @@ class LatestNewsFragment : Fragment() {
 
         if (args.sectionId != null) {
             binding.toolbar.title = args.sectionId
-            latestNewsViewModel.getNewsOfSection(args.sectionId!!.lowercase())
-            refreshNews = { latestNewsViewModel.getNewsOfSection(args.sectionId!!.lowercase()) }
+            latestNewsViewModel.getNewsOfSection(
+                SectionWrapper(
+                    args.sectionId!!.lowercase(),
+                    args.sectionId!!.lowercase()
+                )
+            )
+            refreshNews = {
+                latestNewsViewModel.getNewsOfSection(
+                    SectionWrapper(
+                        args.sectionId!!.lowercase(),
+                        args.sectionId!!.lowercase()
+                    )
+                )
+            }
         } else {
-            latestNewsViewModel.getLatestNews(OrderBy.NEWEST, API_CALL_FIELDS, INITIAL_PAGE)
+            latestNewsViewModel.getNewsOfSection(
+                SectionWrapper(
+                    LATEST_NEWS,
+                    ""
+                )
+            )
             refreshNews =
-                { latestNewsViewModel.getLatestNews(OrderBy.NEWEST, API_CALL_FIELDS, INITIAL_PAGE) }
+                {
+                    latestNewsViewModel.getNewsOfSection(
+                        SectionWrapper(
+                            LATEST_NEWS,
+                            ""
+                        )
+                    )
+                }
         }
 
-
         val newsAdapter = setupAdapter()
+        binding.latestNewsRecyclerview.adapter = newsAdapter
 
-        collectLatestLifecycleFlow(latestNewsViewModel.latestNewsState) { result ->
+        /*lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                newsAdapter.loadStateFlow.collect {
+                    binding.prependProgress.isVisible = it.source.prepend is LoadState.Loading
+                    binding.appendProgress.isVisible = it.source.append is LoadState.Loading
+                }
+            }
+        }*/
+
+        collectLatestLifecycleFlow(latestNewsViewModel.latestNewsState) {
+            binding.latestNewsRecyclerview.hide()
+            binding.placeholderContainer.hide()
+            binding.shimmerLayout.show()
+            binding.shimmerLayout.startShimmerAnimation()
+
+            binding.shimmerLayout.hide()
+            binding.shimmerLayout.stopShimmerAnimation()
+            binding.latestNewsRecyclerview.show()
+            newsAdapter.submitList(it?.results)
+        }
+
+        collectLatestLifecycleFlow(latestNewsViewModel.isRefreshing) {
+            if (it) {
+                refreshNews()
+                latestNewsViewModel.setShouldRefresh(false)
+            } else {
+                if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
+                    false
+            }
+        }
+
+        /*collectLatestLifecycleFlow(latestNewsViewModel.latestNewsState) { result ->
             when (result.status) {
                 Status.LOADING -> {
                     binding.latestNewsRecyclerview.hide()
@@ -95,7 +148,7 @@ class LatestNewsFragment : Fragment() {
                             binding.placeholderContainer.show()
                         } else {
                             binding.latestNewsRecyclerview.show()
-                            newsAdapter.submitList(newsContainerResult)
+                            newsAdapter.submitData(newsContainerResult)
                         }
                     }
                 }
@@ -103,10 +156,12 @@ class LatestNewsFragment : Fragment() {
                     showErrorMessage(result)
                 }
             }
-        }
+        }*/
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            refreshNews()
+            latestNewsViewModel.setShouldRefresh(true)
+//            refreshNews()
+//            newsAdapter.retry()
         }
 
     }
@@ -118,16 +173,33 @@ class LatestNewsFragment : Fragment() {
         }
     }
 
-    private fun setupAdapter(): BannerAdapter {
-        val newsAdapter = BannerAdapter(ItemNewsType.CATEGORIZED) {
+    private fun setupAdapter(): NewsAdapter {
+        val newsAdapter = NewsAdapter(ItemNewsType.CATEGORIZED) {
             navigateToNewsDetailsFragment(it)
         }
-        binding.latestNewsRecyclerview.adapter = newsAdapter
+        /*binding.latestNewsRecyclerview.adapter = newsAdapter.withLoadStateHeaderAndFooter(
+            header = NewsLoadStateAdapter { newsAdapter.retry() },
+            footer = NewsLoadStateAdapter { newsAdapter.retry() },
+        )
+        lifecycleScope.launch {
+            newsAdapter.loadStateFlow.collect { loadState ->
+                val isListEmpty =
+                    loadState.refresh is LoadState.NotLoading && newsAdapter.itemCount == 0
+                // show empty list
+                binding.placeholderContainer.isVisible = isListEmpty
+                // Only show the list if refresh succeeds.
+                binding.latestNewsRecyclerview.isVisible = !isListEmpty
+
+                // Show loading spinner during initial load or refresh.
+                binding.shimmerLayout.isVisible = loadState.source.refresh is LoadState.Loading
+            }
+        }*/
+
         binding.latestNewsRecyclerview.itemAnimator = CustomItemAnimator()
         return newsAdapter
     }
 
-    private fun navigateToNewsDetailsFragment(it: News) {
+    private fun navigateToNewsDetailsFragment(it: Article) {
         findNavController().navigate(
             LatestNewsFragmentDirections.actionLatestNewsFragmentToNewsDetailsFragment(it)
         )

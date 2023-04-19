@@ -23,5 +23,6 @@
     <string name="search_fragment">Search</string>
     <string name="search_content">Search content</string>
     <string name="retry">Retry</string>
+    <string name="news_details_fragment"></string>
 
 </resources>

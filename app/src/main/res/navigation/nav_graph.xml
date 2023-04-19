@@ -69,11 +69,11 @@
     <fragment
         android:id="@+id/newsDetailsFragment"
         android:name="com.cailloutr.rightnews.ui.newsdetailsfragment.NewsDetailsFragment"
-        android:label="fragment_news_details"
+        android:label="@string/news_details_fragment"
         tools:layout="@layout/fragment_news_details" >
         <argument
             android:name="article"
-            app:argType="com.cailloutr.rightnews.model.News" />
+            app:argType="com.cailloutr.rightnews.model.Article" />
     </fragment>
     <fragment
         android:id="@+id/allSectionsFragment"

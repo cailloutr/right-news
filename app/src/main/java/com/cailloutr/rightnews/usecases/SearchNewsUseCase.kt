@@ -1,5 +1,6 @@
 package com.cailloutr.rightnews.usecases
 
+import com.cailloutr.rightnews.constants.Constants.SEARCH_RESULT
 import com.cailloutr.rightnews.data.network.responses.news.toNewsContainer
 import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.other.Resource
@@ -18,7 +19,7 @@ class SearchNewsUseCase @Inject constructor(
                 searchQuery = searchQuery
             )
             if (response.isSuccessful) {
-                return Resource.success(data = response.body()?.response?.toNewsContainer())
+                return Resource.success(data = response.body()?.response?.toNewsContainer(SEARCH_RESULT))
             }
             return Resource.error(msg = response.message(), data = null)
         } catch (e: Exception) {

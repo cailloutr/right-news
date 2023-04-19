@@ -20,6 +20,12 @@ android {
         buildConfigField("String", "API_KEY", API_KEY)
 
         testInstrumentationRunner "com.cailloutr.rightnews.HiltTestRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -68,6 +74,19 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
+    // Room
+    implementation("androidx.room:room-runtime:$roomVersion")
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:$roomVersion")
+
+    // Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+
+
+    // Paging 3 Integration
+    implementation("androidx.room:room-paging:$roomVersion")
+
     // Paging
     implementation ("androidx.paging:paging-runtime:$paging_version")
 
@@ -112,6 +131,7 @@ dependencies {
     testImplementation "io.mockk:mockk-agent:${mockkVersion}"
     testImplementation 'app.cash.turbine:turbine:0.12.1'
     testImplementation("androidx.paging:paging-common:$paging_version")
+    testImplementation("androidx.room:room-testing:$roomVersion")
 
     // Core library
     implementation  'androidx.test:core:1.5.0'
@@ -135,6 +155,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$espressoVersion"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
+    androidTestImplementation 'app.cash.turbine:turbine:0.12.1'
 
     androidTestImplementation 'com.github.tmurakami:dexopener:2.0.5'
     androidTestImplementation "io.mockk:mockk-android:${mockkVersion}"

@@ -1,6 +1,7 @@
 package com.cailloutr.rightnews.data.network.responses.news
 
-import com.cailloutr.rightnews.model.News
+import com.cailloutr.rightnews.data.local.roommodel.RoomArticle
+import com.cailloutr.rightnews.model.Article
 
 data class NewsResult(
     val id: String,
@@ -17,7 +18,7 @@ data class NewsResult(
     val pillarName: String,
 )
 
-fun NewsResult.toNews() = News(
+fun NewsResult.toArticle() = Article(
     id = id,
     type = type,
     sectionId = sectionId,
@@ -33,4 +34,23 @@ fun NewsResult.toNews() = News(
     thumbnail = fields.thumbnail,
     headline = fields.headline,
     body = fields.body,
+)
+
+fun NewsResult.toRoomArticle(containerId: String) = RoomArticle(
+    id = id,
+    type = type,
+    sectionId = sectionId,
+    sectionName = sectionName,
+    webPublicationDate = webPublicationDate,
+    webTitle = webTitle,
+    webUrl = webUrl,
+    apiUrl = apiUrl,
+    isHosted = isHosted,
+    pillarId = pillarId,
+    pillarName = pillarName,
+    trailText = fields.trailText,
+    thumbnail = fields.thumbnail,
+    headline = fields.headline,
+    body = fields.body,
+    containerId = containerId
 )

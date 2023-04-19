@@ -22,7 +22,7 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
-class NewsFragmentTest {
+class ArticleFragmentTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

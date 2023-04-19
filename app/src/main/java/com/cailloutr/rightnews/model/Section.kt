@@ -6,5 +6,4 @@ data class Section(
     val webUrl: String,
     val apiUrl: String,
     val code: String
-) {
-}
+)

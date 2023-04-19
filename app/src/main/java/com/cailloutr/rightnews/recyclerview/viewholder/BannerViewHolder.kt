@@ -3,19 +3,19 @@ package com.cailloutr.rightnews.recyclerview.viewholder
 import android.text.Html
 import coil.load
 import com.cailloutr.rightnews.databinding.LatestNewsBannerBinding
-import com.cailloutr.rightnews.model.News
+import com.cailloutr.rightnews.model.Article
 
 class BannerViewHolder(
     private val binding: LatestNewsBannerBinding,
-    onClick: (News) -> Unit,
+    onClick: (Article) -> Unit,
 ) : BaseViewHolder(binding.root, onClick) {
 
-    override fun bind(news: News) {
-        super.bind(news)
+    override fun bind(article: Article) {
+        super.bind(article)
         binding.apply {
-            bannerNewsTitle.text = news.webTitle
-            bannerNewsDescription.text = Html.fromHtml(news.trailText, Html.FROM_HTML_MODE_COMPACT)
-            bannerNewsImage.load(news.thumbnail) {
+            bannerNewsTitle.text = article.webTitle
+            bannerNewsDescription.text = Html.fromHtml(article.trailText, Html.FROM_HTML_MODE_COMPACT)
+            bannerNewsImage.load(article.thumbnail) {
                 crossfade(true)
             }
         }

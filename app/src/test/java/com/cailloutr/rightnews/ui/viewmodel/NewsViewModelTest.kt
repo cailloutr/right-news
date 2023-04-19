@@ -4,18 +4,21 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.cailloutr.rightnews.TestCoroutineDispatcher
 import com.cailloutr.rightnews.constants.Constants
-import com.cailloutr.rightnews.data.network.responses.news.toNewsContainer
-import com.cailloutr.rightnews.enums.OrderBy
+import com.cailloutr.rightnews.constants.Constants.DEFAULT_SECTIONS
+import com.cailloutr.rightnews.constants.Constants.FIRST_SECTIONS_ID
+import com.cailloutr.rightnews.constants.Constants.LATEST_NEWS
+import com.cailloutr.rightnews.data.local.roommodel.RoomSection
+import com.cailloutr.rightnews.data.network.responses.sections.toRoomSections
+import com.cailloutr.rightnews.model.Article
 import com.cailloutr.rightnews.model.NewsContainer
-import com.cailloutr.rightnews.model.Section
-import com.cailloutr.rightnews.model.Sections
-import com.cailloutr.rightnews.other.Resource
+import com.cailloutr.rightnews.model.SectionWrapper
 import com.cailloutr.rightnews.usecases.NewsUseCases
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -25,98 +28,120 @@ import org.junit.Test
 class NewsViewModelTest {
 
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
+    val mockKRule = MockKRule(this)
 
     @get:Rule
-    val mockkRule = MockKRule(this)
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
+    private lateinit var testDispatcher: TestCoroutineDispatcher
     private lateinit var viewModel: NewsViewModel
 
     @MockK
-    private lateinit var newsUseCase: NewsUseCases
-
+    lateinit var useCases: NewsUseCases
 
     @Before
     fun setUp() {
+        testDispatcher = TestCoroutineDispatcher()
         viewModel = NewsViewModel(
-            TestCoroutineDispatcher(),
-            newsUseCase
+            testDispatcher,
+            useCases
         )
     }
 
     @Test
-    fun `get sections filtered by id given a list should update sectionsListState with a filtered list`() =
-        runTest {
-            val listOfSectionsIds = Constants.DEFAULT_SECTIONS
+    fun test_setSelectedSectionsShouldUpdateSelectedSectionState() = runTest {
+        val section = "games"
 
-            val response = Resource.success(
-                data = Sections(
-                    total = listOfSectionsIds.size.toLong(),
-                    listOfSections = listOfSectionsIds.map {
-                        Section(
-                            id = it,
-                            title = it,
-                            webUrl = it,
-                            apiUrl = it,
-                            code = it
-                        )
-                    }
-                )
-            )
-
-            coEvery {
-                newsUseCase.getSectionsUseCase()
-            } returns (response)
-
-
-            viewModel.sectionsListState.test {
-                viewModel.getSectionsFilteredById(listOfSectionsIds)
-                assertThat(viewModel.sectionsListState.value).isEqualTo(response)
-                cancelAndIgnoreRemainingEvents()
-            }
+        viewModel.selectedSectionsState.test {
+            viewModel.setSelectedSections(section)
+            assertThat(viewModel.selectedSectionsState.value).isEqualTo(section)
+            cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun test_getSectionsFilteredById() = runTest {
+        val sections = DEFAULT_SECTIONS
+        val response = flow<List<RoomSection>> {
+            emit(Constants.fakeResponseSectionRoot.body()?.response?.results?.map { it.toRoomSections() }!!)
+        }
+
+        coEvery { useCases.getSectionsUseCase(testDispatcher.io) } returns (response)
+
+        viewModel.sectionsListState.test {
+            viewModel.getSectionsFilteredById(sections)
+            viewModel.sectionsListState.value.forEach {
+                assertThat(sections).contains(it.id)
+            }
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 
     @Test
     fun test_getLatestNewsShouldUpdateLatestNewsState() = runTest {
-        val response: Resource<NewsContainer> = Resource.success(
-            data = Constants.fakeNews.response.toNewsContainer()
-        )
+        val section = SectionWrapper(LATEST_NEWS, "")
+        val response = flow {
+            emit(
+                NewsContainer(
+                    id = section.sectionName,
+                    total = 100,
+                    startIndex = 1,
+                    pages = 10,
+                    currentPage = 1,
+                    pageSize = 10,
+                    orderBy = "newest",
+                    results = listOf<Article>()
+                )
+            )
+        }
 
         coEvery {
-            newsUseCase.getRecentNewsUseCase(OrderBy.NEWEST, Constants.API_CALL_FIELDS)
+            useCases.getNewsBySectionUseCase(
+                testDispatcher.io,
+                section
+            )
         } returns (response)
 
         viewModel.latestNewsState.test {
-            viewModel.getLatestNews(OrderBy.NEWEST, Constants.API_CALL_FIELDS)
-            assertThat(viewModel.latestNewsState.value).isEqualTo(response)
+            viewModel.getLatestNews(section)
+            assertThat(viewModel.latestNewsState.value?.id!!).isEqualTo(section.sectionName)
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun test_getNewsBySectionShouldUpdateSectionNewsList() = runTest {
-        val sectionId = "article"
-        val response: Resource<NewsContainer> =
-            Resource.success(data = Constants.fakeNews.response.toNewsContainer())
+    fun test_getNewsBySectionShouldUpdateSectionsNewsState() = runTest {
+        val selectedSection = SectionWrapper(
+            sectionName = FIRST_SECTIONS_ID,
+            value = FIRST_SECTIONS_ID
+        )
+        val response = flow {
+            emit(
+                NewsContainer(
+                    id = selectedSection.sectionName,
+                    total = 100,
+                    startIndex = 1,
+                    pages = 10,
+                    currentPage = 1,
+                    pageSize = 10,
+                    orderBy = "newest",
+                    results = listOf<Article>()
+                )
+            )
+        }
 
         coEvery {
-            newsUseCase.getNewsBySectionUseCase(sectionId)
+            useCases.getNewsBySectionUseCase(
+                testDispatcher.io,
+                selectedSection
+            )
         } returns (response)
 
         viewModel.sectionsNewsState.test {
-            viewModel.setSelectedSections(sectionId)
+            viewModel.setSelectedSections(FIRST_SECTIONS_ID)
             viewModel.getNewsBySection()
-            assertThat(viewModel.sectionsNewsState.value).isEqualTo(response)
+            assertThat(viewModel.sectionsNewsState.value?.id).isEqualTo(viewModel.selectedSectionsState.value)
             cancelAndIgnoreRemainingEvents()
         }
-    }
-
-    @Test
-    fun test_setSelectedSectionsShouldUpdateUiStateSelectedSections() {
-        val sectionId = "article"
-
-        viewModel.setSelectedSections(sectionId)
-
-        assertThat(viewModel.selectedSectionsState.value).isEqualTo(sectionId)
     }
 }

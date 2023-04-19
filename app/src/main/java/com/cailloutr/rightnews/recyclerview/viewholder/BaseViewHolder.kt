@@ -4,23 +4,23 @@ import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.cailloutr.rightnews.recyclerview.TAG
-import com.cailloutr.rightnews.model.News
+import com.cailloutr.rightnews.model.Article
 
 open class BaseViewHolder(
     view: View,
-    private val onClick: (News) -> Unit,
+    private val onClick: (Article) -> Unit,
 ) : ViewHolder(view) {
 
-    private lateinit var news: News
+    private lateinit var article: Article
 
-    open fun bind(news: News) {
-        this.news = news
+    open fun bind(article: Article) {
+        this.article = article
     }
 
     init {
         itemView.setOnClickListener {
-            onClick(news)
-            Log.i(TAG, "Click: $news")
+            onClick(article)
+            Log.i(TAG, "Click: $article")
         }
     }
 }

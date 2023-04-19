@@ -2,20 +2,14 @@ package com.cailloutr.rightnews.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingData
-import com.cailloutr.rightnews.data.NewsDataSource
+import com.cailloutr.rightnews.constants.Constants.LATEST_NEWS
 import com.cailloutr.rightnews.enums.OrderBy
-import com.cailloutr.rightnews.model.News
 import com.cailloutr.rightnews.model.NewsContainer
+import com.cailloutr.rightnews.model.SectionWrapper
 import com.cailloutr.rightnews.other.DispatchersProvider
-import com.cailloutr.rightnews.other.Resource
 import com.cailloutr.rightnews.usecases.NewsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,29 +19,45 @@ class LatestNewsViewModel @Inject constructor(
     private val newsUseCases: NewsUseCases,
 ) : ViewModel() {
 
+
     private val _latestNewsState =
-        MutableStateFlow<Resource<NewsContainer>>(Resource.loading(data = null))
-    val latestNewsState: StateFlow<Resource<NewsContainer>> = _latestNewsState.asStateFlow()
+        MutableStateFlow<NewsContainer?>(null)
+    val latestNewsState: StateFlow<NewsContainer?> = _latestNewsState.asStateFlow()
 
-    val pager = Pager(
-        config = NewsDataSource.pagingConfig,
-        pagingSourceFactory = { NewsDataSource() }
-    )
+    private val _isRefreshing = MutableStateFlow<Boolean>(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
-    val _pagerState: Flow<PagingData<News>> = pager.flow
+
+/*    val pagingDataFlow: Flow<PagingData<Article>> = getNews()
+        .cachedIn(viewModelScope)*/
+
+/*    val hasNotScrolledForCurrentSearch: Boolean = false*/
+
+/*    private fun getNews(): Flow<PagingData<Article>> =
+        newsUseCases.getRecentNewsUseCase()*/
 
     fun getLatestNews(orderBy: OrderBy, fields: String, page: Int) {
-        _latestNewsState.value = Resource.loading(data = null)
         viewModelScope.launch(dispatchers.main) {
-            _latestNewsState.value = newsUseCases.getRecentNewsUseCase(orderBy, fields, page)
+            _latestNewsState.value =
+                newsUseCases.getNewsBySectionUseCase(
+                    dispatchers.io,
+                    SectionWrapper(LATEST_NEWS, "")
+                ).first()
         }
     }
 
-    fun getNewsOfSection(section: String) {
-        _latestNewsState.value = Resource.loading(data = null)
+    fun getNewsOfSection(section: SectionWrapper) {
         viewModelScope.launch(dispatchers.main) {
-            _latestNewsState.value = newsUseCases.getNewsBySectionUseCase(section)
+            _latestNewsState.value =
+                newsUseCases.getNewsBySectionUseCase(
+                    dispatchers.io,
+                    section
+                ).first()
         }
+    }
+
+    fun setShouldRefresh(value: Boolean) {
+        _isRefreshing.value = value
     }
 
 }

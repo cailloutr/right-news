@@ -13,10 +13,9 @@ import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR_MESSAGE
 import com.cailloutr.rightnews.databinding.FragmentNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
 import com.cailloutr.rightnews.extensions.*
-import com.cailloutr.rightnews.model.News
+import com.cailloutr.rightnews.model.Article
 import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.other.Resource
-import com.cailloutr.rightnews.other.Status
 import com.cailloutr.rightnews.recyclerview.BannerAdapter
 import com.cailloutr.rightnews.ui.CustomItemAnimator
 import com.cailloutr.rightnews.ui.chip.ChipItem
@@ -59,14 +58,16 @@ class NewsFragment : Fragment() {
         // Setup Sections Chips
         setupSectionsChipItems()
 
-        // Setup Banner News
+        // Setup Banner Article
         setupBannerNews(bannerAdapter)
 
         // Setup Section's news
         setupSectionsNews(newsAdapter)
 
+        setupRefreshFunction()
+
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.fetchDataFromApi()
+            viewModel.setShouldRefresh(true)
         }
 
         binding.fragmentNewsSeeAll.setOnClickListener {
@@ -79,10 +80,21 @@ class NewsFragment : Fragment() {
 
 
         binding.searchBarEdittext.setOnClickListener {
-//            Toast.makeText(requireContext(), "Click", Toast.LENGTH_SHORT).show()
             findNavController().navigate(
                 NewsFragmentDirections.actionNewsFragmentToSearchFragment()
             )
+        }
+    }
+
+    private fun setupRefreshFunction() {
+        collectLatestLifecycleFlow(viewModel.isRefreshing) {
+            if (it) {
+                viewModel.fetchDataFromApi()
+                viewModel.setShouldRefresh(false)
+            } else {
+                if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
+                    false
+            }
         }
     }
 
@@ -107,6 +119,25 @@ class NewsFragment : Fragment() {
 
     private fun setupSectionsNews(newsAdapter: BannerAdapter) {
         collectLifecycleFlow(viewModel.sectionsNewsState) {
+            binding.newsRecyclerView.hide()
+            binding.shimmerLayout.show()
+            binding.progressBar2.show()
+            binding.shimmerLayout.startShimmerAnimation()
+
+            it?.results?.let { newsList ->
+                binding.shimmerLayout.hide()
+                binding.shimmerLayout.stopShimmerAnimation()
+                binding.progressBar2.hide()
+                binding.progressBar2.setVisibilityAfterHide(View.GONE)
+
+                if (newsList.isNotEmpty()) {
+                    binding.newsRecyclerView.show()
+                    newsAdapter.submitList(newsList)
+                }
+            }
+        }
+
+        /*collectLifecycleFlow(viewModel.sectionsNewsState) {
             when (it.status) {
                 Status.LOADING -> {
                     binding.newsRecyclerView.hide()
@@ -131,19 +162,23 @@ class NewsFragment : Fragment() {
                     showErrorMessage(it)
                 }
             }
-        }
-    }
-
-    private fun showErrorMessage(it: Resource<NewsContainer>) {
-        it.message?.let { message ->
-            binding.root.snackbar(NETWORK_ERROR_MESSAGE)
-            Log.e(TAG, "Error: $message")
-        }
+        }*/
     }
 
     private fun setupBannerNews(bannerAdapter: BannerAdapter) {
         collectLifecycleFlow(viewModel.latestNewsState) {
-            when (it.status) {
+            binding.bannersViewPager.hide()
+            binding.shimmerViewPagerLayout.show()
+            binding.shimmerViewPagerLayout.startShimmerAnimation()
+
+            it?.results?.let { articlesList ->
+                binding.shimmerViewPagerLayout.hide()
+                binding.shimmerViewPagerLayout.stopShimmerAnimation()
+                binding.bannersViewPager.show()
+                bannerAdapter.submitList(articlesList)
+            }
+
+            /*when (it.status) {
                 Status.LOADING -> {
                     binding.bannersViewPager.hide()
                     binding.shimmerViewPagerLayout.show()
@@ -164,8 +199,38 @@ class NewsFragment : Fragment() {
                 Status.ERROR -> {
                     showErrorMessage(it)
                 }
-            }
+            }*/
 
+        }
+    }
+
+    private fun setupSectionsChipItems() {
+        collectLifecycleFlow(viewModel.sectionsListState) { sections ->
+            binding.chipGroup.removeAllViews()
+
+            val selectedSection = viewModel.selectedSectionsState.first()
+            repeat(sections.size) {
+                val isChecked = sections[it].id == selectedSection
+                val chip = ChipItem(
+                    id = sections[it].id,
+                    text = sections[it].title,
+                    isChecked = isChecked
+                ) { id ->
+                    if (viewModel.selectedSectionsState.value != id) {
+                        viewModel.setSelectedSections(id)
+                        viewModel.getNewsBySection()
+                        binding.progressBar2.show()
+                    }
+                }
+                binding.chipGroup.addView(chip.toChip(requireContext(), binding.chipGroup))
+            }
+        }
+    }
+
+    private fun showErrorMessage(it: Resource<NewsContainer>) {
+        it.message?.let { message ->
+            binding.root.snackbar(NETWORK_ERROR_MESSAGE)
+            Log.e(TAG, "Error: $message")
         }
     }
 
@@ -181,54 +246,10 @@ class NewsFragment : Fragment() {
         )
     }
 
-    private fun navigateToDetailsFragment(it: News) {
+    private fun navigateToDetailsFragment(it: Article) {
         findNavController().navigate(
             NewsFragmentDirections.actionNewsFragmentToNewsDetailsFragment(it)
         )
-    }
-
-    private fun setupSectionsChipItems() {
-        collectLifecycleFlow(viewModel.sectionsListState) { sections ->
-            binding.chipGroup.removeAllViews()
-
-            val selectedSection = viewModel.selectedSectionsState.first()
-            val listOfSections = sections.data?.listOfSections
-            listOfSections?.size?.let { size ->
-                repeat(size) {
-                    val isChecked = listOfSections[it].id == selectedSection
-                    val chip = ChipItem(
-                        id = listOfSections[it].id,
-                        text = listOfSections[it].title,
-                        isChecked = isChecked
-                    ) { id ->
-                        viewModel.setSelectedSections(id)
-                        viewModel.getNewsBySection()
-                    }
-                    binding.chipGroup.addView(chip.toChip(requireContext(), binding.chipGroup))
-                }
-            }
-        }
-/*        collectLatestLifecycleFlow(viewModel.selectedSectionsState) { selectedSection ->
-            collectLatestLifecycleFlow(viewModel.sectionsListState) { sections ->
-                binding.chipGroup.removeAllViews()
-
-                val listOfSections = sections.data?.listOfSections
-                listOfSections?.size?.let { size ->
-                    repeat(size) {
-                        val isChecked = listOfSections[it].id == selectedSection
-                        val chip = ChipItem(
-                            id = listOfSections[it].id,
-                            text = listOfSections[it].title,
-                            isChecked = isChecked
-                        ) { id ->
-                            viewModel.setSelectedSections(id)
-                            viewModel.getNewsBySection()
-                        }
-                        binding.chipGroup.addView(chip.toChip(requireContext(), binding.chipGroup))
-                    }
-                }
-            }
-        }*/
     }
 
     override fun onDestroyView() {

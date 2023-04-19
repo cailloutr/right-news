@@ -16,17 +16,27 @@ object Constants {
 
     const val API_CALL_FIELDS = "trailText,thumbnail,headline,body"
 
-    const val FIRST_SECTIONS_ID = "games"
+    const val FIRST_SECTIONS_ID = "books"
 
     const val NETWORK_ERROR_MESSAGE = "Error loading new articles"
 
     const val SEARCH_QUERY = "home"
 
+    const val TEST_DB = "test_db"
+
+    const val LATEST_NEWS = "latest_news"
+
+    const val SEARCH_RESULT = "search_result"
+
     const val API_INITIAL_INDEX = 1
 
     const val PAGE_SIZE = 10
 
-    val fakeNews = NewsRoot(
+    const val DATABASE_NAME = "news_db"
+
+    const val ROOM_NEWS_CONTAINER_DEFAULT_SECTION = "article"
+
+    val fakeArticle = NewsRoot(
         response = NewsResponse(
             status = "ok",
             userTier = "developer",
@@ -38,7 +48,7 @@ object Constants {
             orderBy = "newest",
             results = listOf(
                 NewsResult(
-                    id = "games/2023/mar/28/super-mario-lush-soaps",
+                    id = "games/2023/mar/28/super-mario-lush-soaps1",
                     type = "article",
                     sectionId = "article",
                     sectionName = "Games",
@@ -57,10 +67,10 @@ object Constants {
                     pillarName = "Arts"
                 ),
                 NewsResult(
-                    id = "games/2023/mar/28/super-mario-lush-soaps",
+                    id = "games/2023/mar/28/super-mario-lush-soaps2",
                     type = "article",
                     sectionId = "news",
-                    sectionName = "News",
+                    sectionName = "Article",
                     webPublicationDate = "2023-03-28T12:15:18Z",
                     webTitle = "Luigi has sweet notes of apple’: testing out Lush’s unlikely Super Mario soaps",
                     webUrl = "https://www.theguardian.com/games/2023/mar/28/super-mario-lush-soaps",
@@ -79,7 +89,7 @@ object Constants {
         )
     )
 
-    val fakeSearchNews = NewsRoot(
+    val fakeSearchArticle = NewsRoot(
         response = NewsResponse(
             status = "ok",
             userTier = "developer",
@@ -113,7 +123,7 @@ object Constants {
                     id = "games/2023/mar/28/super-mario-lush-soaps",
                     type = "article",
                     sectionId = "news",
-                    sectionName = "News",
+                    sectionName = "Article",
                     webPublicationDate = "2023-03-28T12:15:18Z",
                     webTitle = "Luigi has sweet $SEARCH_QUERY of apple’: testing out Lush’s unlikely Super Mario soaps",
                     webUrl = "https://www.theguardian.com/games/2023/mar/28/super-mario-lush-soaps",
