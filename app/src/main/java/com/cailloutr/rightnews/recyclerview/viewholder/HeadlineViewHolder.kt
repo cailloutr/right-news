@@ -4,11 +4,12 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.cailloutr.rightnews.databinding.SectionsContentItemBinding
 import com.cailloutr.rightnews.model.AllSectionsItem
+import com.cailloutr.rightnews.model.Section
 import com.cailloutr.rightnews.recyclerview.SectionsContentAdapter
 
 class HeadlineViewHolder(
     private val binding: SectionsContentItemBinding,
-    private val onClick: (String) -> Unit
+    private val onClick: (Section) -> Unit
 ) : ViewHolder(binding.root) {
 
     private lateinit var section: AllSectionsItem

@@ -6,10 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.cailloutr.rightnews.databinding.SectionsContentItemBinding
 import com.cailloutr.rightnews.model.AllSectionsItem
+import com.cailloutr.rightnews.model.Section
 import com.cailloutr.rightnews.recyclerview.viewholder.HeadlineViewHolder
 
 class HeadlineAdapter(
-    private val onClick: (String) -> Unit
+    private val onClick: (Section) -> Unit
 ) : ListAdapter<AllSectionsItem, HeadlineViewHolder>(DiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeadlineViewHolder {
         return HeadlineViewHolder(

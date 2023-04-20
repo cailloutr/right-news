@@ -11,7 +11,7 @@ import com.google.android.material.chip.Chip
 
 class SectionsContentViewHolder(
     private val binding: ChipItemBinding,
-    onclick: (String) -> Unit
+    onclick: (Section) -> Unit
 ) : ViewHolder(binding.root) {
 
     private lateinit var section: Section
@@ -23,7 +23,7 @@ class SectionsContentViewHolder(
             } else {
                 it.animateScale()
             }
-            onclick(section.title)
+            onclick(section)
         }
     }
 

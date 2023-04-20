@@ -9,7 +9,7 @@ import com.cailloutr.rightnews.recyclerview.viewholder.SectionsContentViewHolder
 
 class SectionsContentAdapter(
     private val list: List<Section>,
-    private val onClick: (String) -> Unit
+    private val onClick: (Section) -> Unit
 ) : Adapter<SectionsContentViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionsContentViewHolder {
         return SectionsContentViewHolder(
