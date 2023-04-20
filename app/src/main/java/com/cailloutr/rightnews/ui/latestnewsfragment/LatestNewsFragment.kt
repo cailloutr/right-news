@@ -10,6 +10,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.cailloutr.rightnews.R
+import com.cailloutr.rightnews.constants.Constants
 import com.cailloutr.rightnews.constants.Constants.LATEST_NEWS
 import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR_MESSAGE
 import com.cailloutr.rightnews.databinding.FragmentLatestNewsBinding
@@ -19,6 +21,7 @@ import com.cailloutr.rightnews.model.Article
 import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.model.SectionWrapper
 import com.cailloutr.rightnews.other.Resource
+import com.cailloutr.rightnews.other.Status
 import com.cailloutr.rightnews.recyclerview.NewsAdapter
 import com.cailloutr.rightnews.ui.CustomItemAnimator
 import com.cailloutr.rightnews.ui.viewmodel.LatestNewsViewModel
@@ -60,37 +63,12 @@ class LatestNewsFragment : Fragment() {
         setupToolbar(binding.toolbar)
 
         if (args.sectionId != null) {
-            binding.toolbar.title = args.sectionId
-            latestNewsViewModel.getNewsOfSection(
-                SectionWrapper(
-                    args.sectionId!!.lowercase(),
-                    args.sectionId!!.lowercase()
-                )
-            )
-            refreshNews = {
-                latestNewsViewModel.getNewsOfSection(
-                    SectionWrapper(
-                        args.sectionId!!.lowercase(),
-                        args.sectionId!!.lowercase()
-                    )
-                )
-            }
+            binding.toolbar.title = args.sectionTitle
+            getNewsOfSection()
+            refreshNews = { getNewsOfSection() }
         } else {
-            latestNewsViewModel.getNewsOfSection(
-                SectionWrapper(
-                    LATEST_NEWS,
-                    ""
-                )
-            )
-            refreshNews =
-                {
-                    latestNewsViewModel.getNewsOfSection(
-                        SectionWrapper(
-                            LATEST_NEWS,
-                            ""
-                        )
-                    )
-                }
+            getLatestNews()
+            refreshNews = { getLatestNews() }
         }
 
         val newsAdapter = setupAdapter()
@@ -105,27 +83,11 @@ class LatestNewsFragment : Fragment() {
             }
         }*/
 
-        collectLatestLifecycleFlow(latestNewsViewModel.latestNewsState) {
-            binding.latestNewsRecyclerview.hide()
-            binding.placeholderContainer.hide()
-            binding.shimmerLayout.show()
-            binding.shimmerLayout.startShimmerAnimation()
+        setupNews(newsAdapter)
 
-            binding.shimmerLayout.hide()
-            binding.shimmerLayout.stopShimmerAnimation()
-            binding.latestNewsRecyclerview.show()
-            newsAdapter.submitList(it?.results)
-        }
+        setupRefreshFunction()
 
-        collectLatestLifecycleFlow(latestNewsViewModel.isRefreshing) {
-            if (it) {
-                refreshNews()
-                latestNewsViewModel.setShouldRefresh(false)
-            } else {
-                if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
-                    false
-            }
-        }
+        showSnackBar()
 
         /*collectLatestLifecycleFlow(latestNewsViewModel.latestNewsState) { result ->
             when (result.status) {
@@ -160,10 +122,81 @@ class LatestNewsFragment : Fragment() {
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             latestNewsViewModel.setShouldRefresh(true)
-//            refreshNews()
-//            newsAdapter.retry()
         }
 
+    }
+
+    private fun showSnackBar() {
+        collectLifecycleFlow(latestNewsViewModel.showSnackBarEvent) { event ->
+            event.getContentIfNotHandled()?.let { messageResId ->
+                binding.root.snackbar(getString(messageResId))
+            }
+        }
+    }
+
+    private fun setupRefreshFunction() {
+        collectLatestLifecycleFlow(latestNewsViewModel.isRefreshing) {
+            if (it) {
+                refreshNews()
+                latestNewsViewModel.setShouldRefresh(false)
+            } else {
+                if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
+                    false
+            }
+        }
+    }
+
+    private fun setupNews(newsAdapter: NewsAdapter) {
+        collectLatestLifecycleFlow(latestNewsViewModel.latestNewsState) {
+            binding.latestNewsRecyclerview.hide()
+            binding.placeholderContainer.hide()
+            binding.shimmerLayout.show()
+            binding.shimmerLayout.startShimmerAnimation()
+
+            if (it?.total == 0L) {
+                binding.shimmerLayout.hide()
+                binding.shimmerLayout.stopShimmerAnimation()
+                binding.placeholderContainer.show()
+                newsAdapter.submitList(it.results)
+            } else {
+                binding.shimmerLayout.hide()
+                binding.shimmerLayout.stopShimmerAnimation()
+                binding.latestNewsRecyclerview.show()
+                newsAdapter.submitList(it?.results)
+            }
+        }
+    }
+
+    private fun getLatestNews() {
+        latestNewsViewModel.getNewsOfSection(
+            SectionWrapper(
+                LATEST_NEWS,
+                ""
+            )
+        ) { response ->
+            when (response.status) {
+                Status.SUCCESS -> {
+                    latestNewsViewModel.showSnackBarMessage(R.string.network_status_success)
+                }
+                Status.ERROR -> {
+                    if (response.message == Constants.NETWORK_ERROR) {
+                        latestNewsViewModel.showSnackBarMessage(R.string.network_error)
+                    } else {
+                        latestNewsViewModel.showSnackBarMessage(R.string.unknown_error)
+                    }
+                }
+                else -> {}
+            }
+        }
+    }
+
+    private fun getNewsOfSection() {
+        latestNewsViewModel.getNewsOfSection(
+            SectionWrapper(
+                args.sectionId!!.lowercase(),
+                args.sectionId!!.lowercase()
+            )
+        ) {}
     }
 
     private fun showErrorMessage(result: Resource<NewsContainer>) {

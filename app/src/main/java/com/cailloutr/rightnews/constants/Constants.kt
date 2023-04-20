@@ -36,6 +36,8 @@ object Constants {
 
     const val ROOM_NEWS_CONTAINER_DEFAULT_SECTION = "article"
 
+    const val NETWORK_ERROR = "network"
+
     val fakeArticle = NewsRoot(
         response = NewsResponse(
             status = "ok",

@@ -24,5 +24,8 @@
     <string name="search_content">Search content</string>
     <string name="retry">Retry</string>
     <string name="news_details_fragment"></string>
+    <string name="network_status_success">Your information is up-to-date</string>
+    <string name="network_error">Network error: unable to get updated content</string>
+    <string name="unknown_error">Unknown error has occurred</string>
 
 </resources>

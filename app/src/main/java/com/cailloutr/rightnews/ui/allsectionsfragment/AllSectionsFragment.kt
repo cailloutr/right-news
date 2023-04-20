@@ -53,9 +53,12 @@ class AllSectionsFragment : Fragment() {
         uiStateViewModel.hasComponents = VisualComponents()
         setupToolbar(binding.toolbar)
 
-        val adapter = HeadlineAdapter {
+        val adapter = HeadlineAdapter { section ->
             findNavController().navigate(
-                AllSectionsFragmentDirections.actionAllSectionsFragmentToLatestNewsFragment(it)
+                AllSectionsFragmentDirections.actionAllSectionsFragmentToLatestNewsFragment(
+                    section.id,
+                    section.title
+                )
             )
         }
 

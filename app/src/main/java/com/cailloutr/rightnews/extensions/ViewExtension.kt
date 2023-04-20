@@ -36,7 +36,7 @@ fun View.show() {
 
 fun View.snackbar(message: String) = Snackbar.make(
     this,
-    "Error: ${message}",
+    message,
     Snackbar.LENGTH_SHORT
 ).show()
 

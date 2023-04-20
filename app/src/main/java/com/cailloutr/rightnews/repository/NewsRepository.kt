@@ -3,6 +3,7 @@ package com.cailloutr.rightnews.repository
 import android.util.Log
 import com.cailloutr.rightnews.constants.Constants.API_CALL_FIELDS
 import com.cailloutr.rightnews.constants.Constants.API_INITIAL_INDEX
+import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR
 import com.cailloutr.rightnews.data.local.NewsDatabase
 import com.cailloutr.rightnews.data.local.roommodel.RoomArticle
 import com.cailloutr.rightnews.data.local.roommodel.RoomSection
@@ -12,10 +13,11 @@ import com.cailloutr.rightnews.data.network.responses.news.toRoomArticle
 import com.cailloutr.rightnews.data.network.responses.news.toRoomNewsContainer
 import com.cailloutr.rightnews.data.network.responses.sections.toRoomSections
 import com.cailloutr.rightnews.data.network.service.TheGuardianApiHelper
-import com.cailloutr.rightnews.model.SectionWrapper
 import com.cailloutr.rightnews.enums.OrderBy
 import com.cailloutr.rightnews.enums.OrderBy.NEWEST
 import com.cailloutr.rightnews.model.NewsContainer
+import com.cailloutr.rightnews.model.SectionWrapper
+import com.cailloutr.rightnews.other.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -70,8 +72,12 @@ class NewsRepository @Inject constructor(
         fetchSectionsFromApi(context)
     }
 
-    override suspend fun refreshArticles(context: CoroutineDispatcher, section: SectionWrapper) {
-        fetchNewsFromApi(context, section)
+    override suspend fun refreshArticles(
+        context: CoroutineDispatcher,
+        section: SectionWrapper,
+        responseStatus: (Resource<Exception>) -> Unit,
+    ) {
+        fetchNewsFromApi(context, section, responseStatus)
     }
 
     override suspend fun fetchSectionsFromApi(context: CoroutineDispatcher) {
@@ -101,6 +107,7 @@ class NewsRepository @Inject constructor(
     override suspend fun fetchNewsFromApi(
         context: CoroutineDispatcher,
         section: SectionWrapper,
+        responseStatus: (Resource<Exception>) -> Unit,
     ) {
         var error: String = ""
         try {
@@ -133,15 +140,14 @@ class NewsRepository @Inject constructor(
                         }
                     }
                 }
+                responseStatus(Resource.success(data = null))
             } else {
-                error = response.errorBody().toString()
+                responseStatus(Resource.error(msg = NETWORK_ERROR, data = null))
+                Log.e(TAG, "fetchNewsFromApi: ${response.message()}")
             }
         } catch (e: Exception) {
+            responseStatus(Resource.error(msg = NETWORK_ERROR, data = e))
             Log.e(TAG, "fetchNewsFromApi: ${e.printStackTrace()}")
-            Log.e(TAG, "Error: $error")
-        } catch (httpException: HttpException) {
-            Log.e(TAG, "fetchNewsFromApi: ${httpException.printStackTrace()}")
-            Log.e(TAG, "Error: $error")
         }
     }
 

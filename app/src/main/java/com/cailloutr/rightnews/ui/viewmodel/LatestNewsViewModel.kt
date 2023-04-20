@@ -3,10 +3,11 @@ package com.cailloutr.rightnews.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cailloutr.rightnews.constants.Constants.LATEST_NEWS
-import com.cailloutr.rightnews.enums.OrderBy
 import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.model.SectionWrapper
 import com.cailloutr.rightnews.other.DispatchersProvider
+import com.cailloutr.rightnews.other.Resource
+import com.cailloutr.rightnews.ui.Event
 import com.cailloutr.rightnews.usecases.NewsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -27,6 +28,8 @@ class LatestNewsViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow<Boolean>(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
+    private val _showSnackBarEvent = MutableSharedFlow<Event<Int>>()
+    val showSnackBarEvent: SharedFlow<Event<Int>> = _showSnackBarEvent.asSharedFlow()
 
 /*    val pagingDataFlow: Flow<PagingData<Article>> = getNews()
         .cachedIn(viewModelScope)*/
@@ -36,22 +39,22 @@ class LatestNewsViewModel @Inject constructor(
 /*    private fun getNews(): Flow<PagingData<Article>> =
         newsUseCases.getRecentNewsUseCase()*/
 
-    fun getLatestNews(orderBy: OrderBy, fields: String, page: Int) {
+    fun getLatestNews(responseStatus: (Resource<Exception>) -> Unit) {
         viewModelScope.launch(dispatchers.main) {
             _latestNewsState.value =
                 newsUseCases.getNewsBySectionUseCase(
                     dispatchers.io,
-                    SectionWrapper(LATEST_NEWS, "")
+                    SectionWrapper(LATEST_NEWS, ""), responseStatus
                 ).first()
         }
     }
 
-    fun getNewsOfSection(section: SectionWrapper) {
+    fun getNewsOfSection(section: SectionWrapper, responseStatus: (Resource<Exception>) -> Unit) {
         viewModelScope.launch(dispatchers.main) {
             _latestNewsState.value =
                 newsUseCases.getNewsBySectionUseCase(
                     dispatchers.io,
-                    section
+                    section, responseStatus
                 ).first()
         }
     }
@@ -60,4 +63,9 @@ class LatestNewsViewModel @Inject constructor(
         _isRefreshing.value = value
     }
 
+    fun showSnackBarMessage(messageResId: Int) {
+        viewModelScope.launch {
+            _showSnackBarEvent.emit(Event(messageResId))
+        }
+    }
 }

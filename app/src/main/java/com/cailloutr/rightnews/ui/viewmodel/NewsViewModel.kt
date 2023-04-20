@@ -9,12 +9,11 @@ import com.cailloutr.rightnews.data.local.roommodel.RoomSection
 import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.model.SectionWrapper
 import com.cailloutr.rightnews.other.DispatchersProvider
+import com.cailloutr.rightnews.other.Resource
+import com.cailloutr.rightnews.ui.Event
 import com.cailloutr.rightnews.usecases.NewsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,14 +41,24 @@ class NewsViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
 
+    private val _showSnackBarEvent = MutableSharedFlow<Event<Int>>()
+    val showSnackBarEvent: SharedFlow<Event<Int>> = _showSnackBarEvent.asSharedFlow()
+
+
     init {
         fetchDataFromApi()
     }
 
-    fun fetchDataFromApi() {
+    fun fetchDataFromApi(responseStatus: (Resource<Exception>) -> Unit = {}) {
         getSectionsFilteredById(DEFAULT_SECTIONS)
-        getLatestNews(SectionWrapper(sectionName = LATEST_NEWS, value = ""))
-        getNewsBySection()
+        getLatestNews(SectionWrapper(sectionName = LATEST_NEWS, value = ""), responseStatus)
+        getNewsBySection {}
+    }
+
+    fun showSnackBarMessage(messageResId: Int) {
+        viewModelScope.launch {
+            _showSnackBarEvent.emit(Event(messageResId))
+        }
     }
 
     fun setSelectedSections(section: String) {
@@ -68,21 +77,26 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    fun getLatestNews(section: SectionWrapper) {
+    fun getLatestNews(section: SectionWrapper, responseStatus: (Resource<Exception>) -> Unit) {
         viewModelScope.launch(dispatchers.main) {
             _latestNewsState.value =
-                newsUseCases.getNewsBySectionUseCase(dispatchers.io, section).first()
+                newsUseCases.getNewsBySectionUseCase(dispatchers.io, section, responseStatus)
+                    .first()
         }
     }
 
-    fun getNewsBySection() {
+    fun getNewsBySection(responseStatus: (Resource<Exception>) -> Unit) {
         viewModelScope.launch(dispatchers.main) {
             val selectedSection = SectionWrapper(
                 sectionName = selectedSectionsState.value,
                 value = selectedSectionsState.value
             )
             _sectionNewsState.value =
-                newsUseCases.getNewsBySectionUseCase(dispatchers.io, selectedSection).first()
+                newsUseCases.getNewsBySectionUseCase(
+                    dispatchers.io,
+                    selectedSection,
+                    responseStatus
+                ).first()
         }
     }
 

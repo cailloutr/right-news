@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.cailloutr.rightnews.R
+import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR
 import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR_MESSAGE
 import com.cailloutr.rightnews.databinding.FragmentNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
@@ -16,6 +18,7 @@ import com.cailloutr.rightnews.extensions.*
 import com.cailloutr.rightnews.model.Article
 import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.other.Resource
+import com.cailloutr.rightnews.other.Status
 import com.cailloutr.rightnews.recyclerview.BannerAdapter
 import com.cailloutr.rightnews.ui.CustomItemAnimator
 import com.cailloutr.rightnews.ui.chip.ChipItem
@@ -66,6 +69,8 @@ class NewsFragment : Fragment() {
 
         setupRefreshFunction()
 
+        showSnackBar()
+
         binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.setShouldRefresh(true)
         }
@@ -78,7 +83,6 @@ class NewsFragment : Fragment() {
             navigateToAllSectionsFragment()
         }
 
-
         binding.searchBarEdittext.setOnClickListener {
             findNavController().navigate(
                 NewsFragmentDirections.actionNewsFragmentToSearchFragment()
@@ -86,10 +90,32 @@ class NewsFragment : Fragment() {
         }
     }
 
+    private fun showSnackBar() {
+        collectLifecycleFlow(viewModel.showSnackBarEvent) { event ->
+            event.getContentIfNotHandled()?.let { messageResId ->
+                binding.root.snackbar(getString(messageResId))
+            }
+        }
+    }
+
     private fun setupRefreshFunction() {
         collectLatestLifecycleFlow(viewModel.isRefreshing) {
             if (it) {
-                viewModel.fetchDataFromApi()
+                viewModel.fetchDataFromApi() { response ->
+                    when (response.status) {
+                        Status.SUCCESS -> {
+                            viewModel.showSnackBarMessage(R.string.network_status_success)
+                        }
+                        Status.ERROR -> {
+                            if (response.message == NETWORK_ERROR) {
+                                viewModel.showSnackBarMessage(R.string.network_error)
+                            } else {
+                                viewModel.showSnackBarMessage(R.string.unknown_error)
+                            }
+                        }
+                        else -> {}
+                    }
+                }
                 viewModel.setShouldRefresh(false)
             } else {
                 if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
@@ -218,7 +244,18 @@ class NewsFragment : Fragment() {
                 ) { id ->
                     if (viewModel.selectedSectionsState.value != id) {
                         viewModel.setSelectedSections(id)
-                        viewModel.getNewsBySection()
+                        viewModel.getNewsBySection() { response ->
+                            when (response.status) {
+                                Status.ERROR -> {
+                                    if (response.message == NETWORK_ERROR) {
+                                        viewModel.showSnackBarMessage(R.string.network_error)
+                                    } else {
+                                        viewModel.showSnackBarMessage(R.string.unknown_error)
+                                    }
+                                }
+                                else -> {}
+                            }
+                        }
                         binding.progressBar2.show()
                     }
                 }
@@ -242,7 +279,7 @@ class NewsFragment : Fragment() {
 
     private fun navigateToLatestNewsFragment() {
         findNavController().navigate(
-            NewsFragmentDirections.actionNewsFragmentToLatestNewsFragment(null)
+            NewsFragmentDirections.actionNewsFragmentToLatestNewsFragment(null, null)
         )
     }
 
