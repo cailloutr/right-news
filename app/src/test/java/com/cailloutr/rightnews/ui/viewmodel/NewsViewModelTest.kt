@@ -8,9 +8,8 @@ import com.cailloutr.rightnews.constants.Constants.DEFAULT_SECTIONS
 import com.cailloutr.rightnews.constants.Constants.FIRST_SECTIONS_ID
 import com.cailloutr.rightnews.constants.Constants.LATEST_NEWS
 import com.cailloutr.rightnews.data.local.roommodel.RoomSection
+import com.cailloutr.rightnews.data.network.responses.news.toNewsContainer
 import com.cailloutr.rightnews.data.network.responses.sections.toRoomSections
-import com.cailloutr.rightnews.model.Article
-import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.model.SectionWrapper
 import com.cailloutr.rightnews.usecases.NewsUseCases
 import com.google.common.truth.Truth.assertThat
@@ -19,6 +18,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -80,30 +80,18 @@ class NewsViewModelTest {
     @Test
     fun test_getLatestNewsShouldUpdateLatestNewsState() = runTest {
         val section = SectionWrapper(LATEST_NEWS, "")
-        val response = flow {
-            emit(
-                NewsContainer(
-                    id = section.sectionName,
-                    total = 100,
-                    startIndex = 1,
-                    pages = 10,
-                    currentPage = 1,
-                    pageSize = 10,
-                    orderBy = "newest",
-                    results = listOf<Article>()
-                )
-            )
-        }
+        val response = Constants.fakeArticle.response.toNewsContainer(section.sectionName)
 
         coEvery {
             useCases.getNewsBySectionUseCase(
                 testDispatcher.io,
-                section
+                section,
+                any()
             )
-        } returns (response)
+        } returns flowOf(response)
 
         viewModel.latestNewsState.test {
-            viewModel.getLatestNews(section)
+            viewModel.getLatestNews(section) {}
             assertThat(viewModel.latestNewsState.value?.id!!).isEqualTo(section.sectionName)
             cancelAndIgnoreRemainingEvents()
         }
@@ -115,31 +103,20 @@ class NewsViewModelTest {
             sectionName = FIRST_SECTIONS_ID,
             value = FIRST_SECTIONS_ID
         )
-        val response = flow {
-            emit(
-                NewsContainer(
-                    id = selectedSection.sectionName,
-                    total = 100,
-                    startIndex = 1,
-                    pages = 10,
-                    currentPage = 1,
-                    pageSize = 10,
-                    orderBy = "newest",
-                    results = listOf<Article>()
-                )
-            )
-        }
+
+        val response = Constants.fakeArticle.response.toNewsContainer(selectedSection.sectionName)
 
         coEvery {
             useCases.getNewsBySectionUseCase(
                 testDispatcher.io,
-                selectedSection
+                selectedSection,
+                any()
             )
-        } returns (response)
+        } returns flowOf(response)
 
         viewModel.sectionsNewsState.test {
             viewModel.setSelectedSections(FIRST_SECTIONS_ID)
-            viewModel.getNewsBySection()
+            viewModel.getNewsBySection {}
             assertThat(viewModel.sectionsNewsState.value?.id).isEqualTo(viewModel.selectedSectionsState.value)
             cancelAndIgnoreRemainingEvents()
         }

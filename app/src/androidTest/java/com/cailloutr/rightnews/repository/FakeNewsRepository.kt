@@ -13,13 +13,13 @@ import com.cailloutr.rightnews.data.network.service.TheGuardianApiHelper
 import com.cailloutr.rightnews.enums.OrderBy
 import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.model.SectionWrapper
+import com.cailloutr.rightnews.other.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 import retrofit2.Response
 
 class FakeNewsRepository(
@@ -64,9 +64,14 @@ class FakeNewsRepository(
         fetchSectionsFromApi(context)
     }
 
-    override suspend fun refreshArticles(context: CoroutineDispatcher, section: SectionWrapper) {
-        fetchNewsFromApi(context, section)
+    override suspend fun refreshArticles(
+        context: CoroutineDispatcher,
+        section: SectionWrapper,
+        responseStatus: (message: Resource<Exception>) -> Unit,
+    ) {
+        fetchNewsFromApi(context, section, responseStatus)
     }
+
 
     override suspend fun fetchSectionsFromApi(context: CoroutineDispatcher) {
         val response = theGuardianApi.getAllSections()
@@ -84,7 +89,7 @@ class FakeNewsRepository(
         }
     }
 
-    override suspend fun fetchNewsFromApi(context: CoroutineDispatcher, section: SectionWrapper) {
+    override suspend fun fetchNewsFromApi(context: CoroutineDispatcher, section: SectionWrapper, responseStatus: (message: Resource<Exception>) -> Unit) {
         var error: String = ""
         try {
             val response = withContext(context) {
@@ -120,7 +125,7 @@ class FakeNewsRepository(
                 error = response.errorBody().toString()
             }
         } catch (_: Exception) {
-        } catch (_: HttpException) {
+
         }
     }
 

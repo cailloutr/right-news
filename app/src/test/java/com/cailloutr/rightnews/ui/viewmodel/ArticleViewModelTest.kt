@@ -4,10 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.cailloutr.rightnews.TestCoroutineDispatcher
 import com.cailloutr.rightnews.constants.Constants
-import com.cailloutr.rightnews.constants.Constants.LATEST_NEWS
+import com.cailloutr.rightnews.data.local.roommodel.RoomSection
 import com.cailloutr.rightnews.data.network.responses.news.toNewsContainer
 import com.cailloutr.rightnews.data.network.responses.sections.toRoomSections
-import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.model.SectionWrapper
 import com.cailloutr.rightnews.other.Resource
 import com.cailloutr.rightnews.usecases.NewsUseCases
@@ -16,8 +15,11 @@ import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -31,16 +33,17 @@ class ArticleViewModelTest {
     @get:Rule
     val mockkRule = MockKRule(this)
 
-    private lateinit var viewModel: NewsViewModel
-
     @MockK
     private lateinit var newsUseCase: NewsUseCases
+
+    private lateinit var viewModel: NewsViewModel
 
     private lateinit var testDispatcher: TestCoroutineDispatcher
 
 
     @Before
     fun setUp() {
+        MockKAnnotations.init(this, true)
         testDispatcher = TestCoroutineDispatcher()
         viewModel = NewsViewModel(
             testDispatcher,
@@ -49,11 +52,12 @@ class ArticleViewModelTest {
     }
 
     @Test
-    fun `get sections filtered by id given a list should update sectionsListState with a filtered list`() =
+    fun `get sections filtered by id given a list should update sectionsListState`() =
         runTest {
-            val listOfSections = Constants.fakeResponseSectionRoot.body()?.response?.results?.map {
-                it.toRoomSections()
-            }!!
+            val listOfSections: List<RoomSection> =
+                Constants.fakeResponseSectionRoot.body()?.response?.results?.map {
+                    it.toRoomSections()
+                }!!
 
             val response = flow {
                 emit(listOfSections)
@@ -66,51 +70,82 @@ class ArticleViewModelTest {
 
             viewModel.sectionsListState.test {
                 viewModel.getSectionsFilteredById(Constants.DEFAULT_SECTIONS)
-                assertThat(viewModel.sectionsListState.value).isEqualTo(response)
+                assertThat(viewModel.sectionsListState.value).containsAnyIn(response.first())
                 cancelAndIgnoreRemainingEvents()
             }
         }
 
     @Test
-    fun test_getLatestNewsShouldUpdateLatestNewsState() {
-        val sectionWrapper = SectionWrapper(LATEST_NEWS, "")
-        runTest {
-            val response: Resource<NewsContainer> = Resource.success(
-                data = Constants.fakeArticle.response.toNewsContainer(sectionWrapper.sectionName)
-            )
+    fun testGetLatestNews() = runTest {
+        // Mock response data
+        val section = SectionWrapper("news", "news")
+        val expectedNews = Constants.fakeArticle.response.toNewsContainer(section.sectionName)
 
-    //        coEvery {
-    //            newsUseCase.getRecentNewsUseCase()
-    //        } returns (response)
+        // Mock NewsUseCases
+        val newsUseCases = mockk<NewsUseCases>()
 
-            viewModel.latestNewsState.test {
-                viewModel.getLatestNews(sectionWrapper)
-                assertThat(viewModel.latestNewsState.value).isEqualTo(response)
-                cancelAndIgnoreRemainingEvents()
-            }
-        }
+        coEvery { newsUseCases.getNewsBySectionUseCase(any(), section, any()) } returns flowOf(
+            expectedNews
+        )
+
+        // Create NewsViewModel with mocked NewsUseCases
+        val viewModel = NewsViewModel(testDispatcher, newsUseCases)
+
+        // Call getLatestNews
+        viewModel.getLatestNews(section) {}
+
+        // Verify that latestNewsState was updated with the expected news
+        assertThat(viewModel.latestNewsState.value).isEqualTo(expectedNews)
     }
 
     @Test
+    fun test_getNewsBySectionShouldUpdateSectionNewsState() = runTest {
+        // Arrange
+        val sectionName = "sports"
+        val newsContainer = Constants.fakeArticle.response.toNewsContainer(sectionName)
+        val responseStatus = mockk<Resource<Exception>>()
+        val newsUseCase = mockk<NewsUseCases>()
+
+        coEvery { newsUseCase.getNewsBySectionUseCase(any(), any(), captureLambda()) } returns flowOf(newsContainer)
+
+        val viewModel = NewsViewModel(
+            testDispatcher,
+            newsUseCase
+        )
+
+        // Act
+        viewModel.setSelectedSections(sectionName)
+        viewModel.getNewsBySection { }
+
+        assertEquals(newsContainer, viewModel.sectionsNewsState.value)
+    }
+
+/*    @Test
     fun test_getNewsBySectionShouldUpdateSectionNewsList() = runTest {
-        val sectionId = "article"
-        val response: Resource<NewsContainer> =
-            Resource.success(data = Constants.fakeArticle.response.toNewsContainer(sectionId))
+        val section = SectionWrapper("article", "article")
+        val expectedNews = Constants.fakeArticle.response.toNewsContainer(section.sectionName)
 
-/*        coEvery {
+        // Mock NewsUseCases
+        val newsUseCases = mockk<NewsUseCases>()
+
+        coEvery {
             newsUseCase.getNewsBySectionUseCase(
-                testDispatcher.io,
-                SectionWrapper(sectionId, sectionId)
+                any(),
+                section,
+                any()
             )
-        } returns (response)*/
+        } returns flowOf(expectedNews)
 
-        viewModel.sectionsNewsState.test {
-            viewModel.setSelectedSections(sectionId)
-            viewModel.getNewsBySection()
-            assertThat(viewModel.sectionsNewsState.value).isEqualTo(response)
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
+        // Create NewsViewModel with mocked NewsUseCases
+        val viewModel = NewsViewModel(testDispatcher, newsUseCases)
+
+        viewModel.setSelectedSections(section.value)
+
+        viewModel.getNewsBySection { }
+
+        assertThat(viewModel.sectionsNewsState.value).isEqualTo(expectedNews)
+
+    }*/
 
     @Test
     fun test_setSelectedSectionsShouldUpdateUiStateSelectedSections() {

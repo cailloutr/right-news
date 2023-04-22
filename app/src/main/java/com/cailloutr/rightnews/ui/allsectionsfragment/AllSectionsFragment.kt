@@ -65,7 +65,7 @@ class AllSectionsFragment : Fragment() {
         binding.sectionsContentRecyclerview.adapter = adapter
 
 
-        collectLatestLifecycleFlow(viewModel.getAllSections()) { roomSectionsList ->
+        collectLatestLifecycleFlow(viewModel.allSectionsState) { roomSectionsList ->
             binding.shimmerLayout.apply {
                 hide()
                 stopShimmerAnimation()
@@ -82,34 +82,6 @@ class AllSectionsFragment : Fragment() {
                 adapter.submitList(sectionsList.toAllSectionsItem())
             }
         }
-
-        /*collectLifecycleFlow(viewModel.sectionsListState) {
-            when (it.status) {
-                Status.LOADING -> {
-                    binding.sectionsContentRecyclerview.visibility = View.GONE
-                    binding.shimmerLayout.apply {
-                        visibility = View.VISIBLE
-                        startShimmerAnimation()
-                    }
-                }
-                Status.SUCCESS -> {
-                    binding.shimmerLayout.apply {
-                        visibility = View.GONE
-                        stopShimmerAnimation()
-                    }
-                    binding.sectionsContentRecyclerview.visibility = View.VISIBLE
-                    it.data?.let { sections ->
-                        adapter.submitList(sections.toAllSectionsItem())
-                    }
-                }
-                Status.ERROR -> {
-                    it.message?.let { message ->
-                        binding.root.snackbar(NETWORK_ERROR_MESSAGE)
-                        Log.e(TAG, "Error: $message")
-                    }
-                }
-            }
-        }*/
     }
 
     override fun onDestroyView() {

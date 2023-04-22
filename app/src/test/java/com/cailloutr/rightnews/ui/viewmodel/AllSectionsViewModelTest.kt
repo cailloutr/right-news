@@ -8,11 +8,13 @@ import com.cailloutr.rightnews.data.local.roommodel.RoomSection
 import com.cailloutr.rightnews.data.network.responses.sections.toRoomSections
 import com.cailloutr.rightnews.usecases.NewsUseCases
 import com.google.common.truth.Truth.assertThat
+import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -31,12 +33,13 @@ class AllSectionsViewModelTest {
     private lateinit var viewModel: AllSectionsViewModel
 
     @MockK
-    private lateinit var newsUseCase: NewsUseCases
+    lateinit var newsUseCase: NewsUseCases
 
     private lateinit var dispatchers: TestCoroutineDispatcher
 
     @Before
     fun setUp() {
+        MockKAnnotations.init(this, true)
         dispatchers = TestCoroutineDispatcher()
         viewModel = AllSectionsViewModel(
             dispatchers = dispatchers,
@@ -46,9 +49,9 @@ class AllSectionsViewModelTest {
 
     @Test
     fun test_getAllSections() = runTest {
+        val list: List<RoomSection> = Constants.fakeResponseSectionRoot.body()?.response?.results?.map { it.toRoomSections() }!!
 
         val response: Flow<List<RoomSection>> = flow {
-            val list = Constants.fakeResponseSectionRoot.body()?.response?.results?.map { it.toRoomSections() }!!
             emit(list)
         }
 
@@ -56,10 +59,9 @@ class AllSectionsViewModelTest {
             newsUseCase.getSectionsUseCase(dispatchers.io)
         } returns (response)
 
-
-        viewModel.getAllSections().test {
-            val result = viewModel.getAllSections()
-            assertThat(result).isEqualTo(response)
+        viewModel.allSectionsState.test {
+            viewModel.getAllSections()
+            assertThat(viewModel.allSectionsState.value).isEqualTo(response.first())
             cancelAndIgnoreRemainingEvents()
         }
 

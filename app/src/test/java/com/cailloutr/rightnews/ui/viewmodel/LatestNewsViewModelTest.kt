@@ -1,18 +1,19 @@
 package com.cailloutr.rightnews.ui.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import app.cash.turbine.test
 import com.cailloutr.rightnews.TestCoroutineDispatcher
 import com.cailloutr.rightnews.constants.Constants
-import com.cailloutr.rightnews.constants.Constants.API_CALL_FIELDS
-import com.cailloutr.rightnews.enums.OrderBy
-import com.cailloutr.rightnews.model.NewsContainer
-import com.cailloutr.rightnews.other.Resource
+import com.cailloutr.rightnews.constants.Constants.LATEST_NEWS
+import com.cailloutr.rightnews.data.network.responses.news.toNewsContainer
+import com.cailloutr.rightnews.model.SectionWrapper
 import com.cailloutr.rightnews.usecases.NewsUseCases
 import com.google.common.truth.Truth.assertThat
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -30,7 +31,7 @@ class LatestNewsViewModelTest {
     private lateinit var viewModel: LatestNewsViewModel
 
     @MockK
-    private lateinit var useCases: NewsUseCases
+    private lateinit var newsUseCases: NewsUseCases
 
     private lateinit var testDispatcher: TestCoroutineDispatcher
 
@@ -39,40 +40,55 @@ class LatestNewsViewModelTest {
         testDispatcher = TestCoroutineDispatcher()
         viewModel = LatestNewsViewModel(
             testDispatcher,
-            useCases
+            newsUseCases
         )
     }
 
-
     @Test
-    fun getLatestNewsShouldReturn() = runTest {
-        val response: Resource<NewsContainer> = Resource.success( data = null)
+    fun `getLatestNews should update latestNewsState`() = runTest {
+        // Arrange
+        val expectedNewsContainer = Constants.fakeArticle.response.toNewsContainer("")
 
-//        coEvery {
-//            useCases.getRecentNewsUseCase()
-//        } returns (response)
+        coEvery {
+            newsUseCases.getNewsBySectionUseCase(
+                testDispatcher.io,
+                SectionWrapper(LATEST_NEWS, ""),
+                any()
+            )
+        } returns flowOf(expectedNewsContainer)
 
-        viewModel.latestNewsState.test {
-            viewModel.getLatestNews(OrderBy.NEWEST, API_CALL_FIELDS, Constants.API_INITIAL_INDEX)
-            assertThat(viewModel.latestNewsState.value).isEqualTo(response)
-            cancelAndIgnoreRemainingEvents()
+        // Act
+        viewModel.getLatestNews { }
+
+        assertThat(viewModel.latestNewsState.value).isEqualTo(expectedNewsContainer)
+
+
+        coVerify {
+            newsUseCases.getNewsBySectionUseCase(
+                testDispatcher.io,
+                SectionWrapper(LATEST_NEWS, ""),
+                any()
+            )
         }
     }
 
     @Test
-    fun getNewsOfSectionShouldUpdateViewModelLatestNewsState() = runTest{
-        TODO()
-        /*val section = "about"
-        val response: Resource<NewsContainer> = Resource.success( data = null)
+    fun `getNewsOfSection should update latestNewsState`() = runTest {
+        // Arrange
+        val section = SectionWrapper("politics", "Politics")
+        val expectedNewsContainer = Constants.fakeArticle.response.toNewsContainer(section.sectionName)
 
         coEvery {
-            useCases.getNewsBySectionUseCase(testDispatcher.io, section)
-        } returns (response)
+            newsUseCases.getNewsBySectionUseCase(
+                testDispatcher.io,
+                section,
+                any()
+            )
+        } returns flowOf(expectedNewsContainer)
 
-        viewModel.latestNewsState.test {
-            viewModel.getNewsOfSection(section)
-            assertThat(viewModel.latestNewsState.value).isEqualTo(response)
-            cancelAndIgnoreRemainingEvents()
-        }*/
+        // Act
+        viewModel.getNewsOfSection(section) { }
+
+        assertThat(viewModel.latestNewsState.value).isEqualTo(expectedNewsContainer)
     }
 }

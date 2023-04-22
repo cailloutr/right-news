@@ -83,7 +83,7 @@ class GetRecentArticleUseCaseTest {
             } returns (response)
 
             val result =
-                userCase(testDispatcher.io, sectionWrapper).first()
+                userCase(testDispatcher.io, sectionWrapper, {}).first()
 
             assertThat(result.id).isEqualTo(sectionWrapper.sectionName)
         }

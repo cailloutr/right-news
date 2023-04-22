@@ -1,7 +1,6 @@
 package com.cailloutr.rightnews.ui.newsfragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,13 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.cailloutr.rightnews.R
 import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR
-import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR_MESSAGE
 import com.cailloutr.rightnews.databinding.FragmentNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
 import com.cailloutr.rightnews.extensions.*
 import com.cailloutr.rightnews.model.Article
-import com.cailloutr.rightnews.model.NewsContainer
-import com.cailloutr.rightnews.other.Resource
 import com.cailloutr.rightnews.other.Status
 import com.cailloutr.rightnews.recyclerview.BannerAdapter
 import com.cailloutr.rightnews.ui.CustomItemAnimator
@@ -162,33 +158,6 @@ class NewsFragment : Fragment() {
                 }
             }
         }
-
-        /*collectLifecycleFlow(viewModel.sectionsNewsState) {
-            when (it.status) {
-                Status.LOADING -> {
-                    binding.newsRecyclerView.hide()
-                    binding.shimmerLayout.show()
-                    binding.shimmerLayout.startShimmerAnimation()
-                }
-                Status.SUCCESS -> {
-                    if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
-                        false
-
-                    it.data?.let { newsList ->
-                        binding.shimmerLayout.hide()
-                        binding.shimmerLayout.stopShimmerAnimation()
-
-                        if (newsList.results.isNotEmpty()) {
-                            binding.newsRecyclerView.show()
-                            newsAdapter.submitList(newsList.results)
-                        }
-                    }
-                }
-                Status.ERROR -> {
-                    showErrorMessage(it)
-                }
-            }
-        }*/
     }
 
     private fun setupBannerNews(bannerAdapter: BannerAdapter) {
@@ -203,30 +172,6 @@ class NewsFragment : Fragment() {
                 binding.bannersViewPager.show()
                 bannerAdapter.submitList(articlesList)
             }
-
-            /*when (it.status) {
-                Status.LOADING -> {
-                    binding.bannersViewPager.hide()
-                    binding.shimmerViewPagerLayout.show()
-                    binding.shimmerViewPagerLayout.startShimmerAnimation()
-                }
-                Status.SUCCESS -> {
-                    if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
-                        false
-
-                    it.data?.let { newContainer ->
-                        binding.shimmerViewPagerLayout.hide()
-                        binding.shimmerViewPagerLayout.stopShimmerAnimation()
-                        binding.bannersViewPager.show()
-                        bannerAdapter.submitList(newContainer.results)
-                    }
-
-                }
-                Status.ERROR -> {
-                    showErrorMessage(it)
-                }
-            }*/
-
         }
     }
 
@@ -261,13 +206,6 @@ class NewsFragment : Fragment() {
                 }
                 binding.chipGroup.addView(chip.toChip(requireContext(), binding.chipGroup))
             }
-        }
-    }
-
-    private fun showErrorMessage(it: Resource<NewsContainer>) {
-        it.message?.let { message ->
-            binding.root.snackbar(NETWORK_ERROR_MESSAGE)
-            Log.e(TAG, "Error: $message")
         }
     }
 

@@ -98,8 +98,10 @@ class NewsRepositoryTest {
 
         repository.refreshArticles(
             testDispatcher.io,
-            SectionWrapper(ROOM_NEWS_CONTAINER_DEFAULT_SECTION, ROOM_NEWS_CONTAINER_DEFAULT_SECTION)
-        )
+            SectionWrapper(
+                ROOM_NEWS_CONTAINER_DEFAULT_SECTION,
+                ROOM_NEWS_CONTAINER_DEFAULT_SECTION
+            ), {})
 
         val result: Flow<NewsContainer> =
             repository.getNewsOrderedByDate(
@@ -129,19 +131,15 @@ class NewsRepositoryTest {
 
     @Test
     fun refreshArticlesShouldCallFetchArticlesFromApi() = runTest {
-        repository.refreshArticles(
-            testDispatcher.io,
-            SectionWrapper(ROOM_NEWS_CONTAINER_DEFAULT_SECTION, ROOM_NEWS_CONTAINER_DEFAULT_SECTION)
-        )
 
+        val sectionWrapper = SectionWrapper("sport", "Sport")
+
+        // when
+        repository.refreshArticles(testDispatcher.io, sectionWrapper) {}
+
+        // then
         coVerify {
-            repository.fetchNewsFromApi(
-                testDispatcher.io,
-                SectionWrapper(
-                    ROOM_NEWS_CONTAINER_DEFAULT_SECTION,
-                    ROOM_NEWS_CONTAINER_DEFAULT_SECTION
-                )
-            )
+            repository.fetchNewsFromApi(testDispatcher.io, sectionWrapper, any())
         }
     }
 
@@ -155,8 +153,10 @@ class NewsRepositoryTest {
 
         repository.fetchNewsFromApi(
             testDispatcher.io,
-            SectionWrapper(ROOM_NEWS_CONTAINER_DEFAULT_SECTION, ROOM_NEWS_CONTAINER_DEFAULT_SECTION)
-        )
+            SectionWrapper(
+                ROOM_NEWS_CONTAINER_DEFAULT_SECTION,
+                ROOM_NEWS_CONTAINER_DEFAULT_SECTION
+            ), {})
 
         val newsContainerResult: RoomNewsContainer =
             database.newsContainerDao.getNewsContainer(ROOM_NEWS_CONTAINER_DEFAULT_SECTION).first()

@@ -83,7 +83,7 @@ class GetArticleBySectionUseCaseTest {
             } returns (response)
 
             val result =
-                userCase(testDispatcher.io, SectionWrapper(section, section)).first()
+                userCase(testDispatcher.io, SectionWrapper(section, section), {}).first()
 
             assertThat(result.results).isNotEmpty()
             assertThat(result.id).isEqualTo(section)
