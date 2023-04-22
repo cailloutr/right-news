@@ -1,7 +1,6 @@
 package com.cailloutr.rightnews.ui.latestnewsfragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,14 +12,11 @@ import androidx.navigation.fragment.navArgs
 import com.cailloutr.rightnews.R
 import com.cailloutr.rightnews.constants.Constants
 import com.cailloutr.rightnews.constants.Constants.LATEST_NEWS
-import com.cailloutr.rightnews.constants.Constants.NETWORK_ERROR_MESSAGE
 import com.cailloutr.rightnews.databinding.FragmentLatestNewsBinding
 import com.cailloutr.rightnews.enums.ItemNewsType
 import com.cailloutr.rightnews.extensions.*
 import com.cailloutr.rightnews.model.Article
-import com.cailloutr.rightnews.model.NewsContainer
 import com.cailloutr.rightnews.model.SectionWrapper
-import com.cailloutr.rightnews.other.Resource
 import com.cailloutr.rightnews.other.Status
 import com.cailloutr.rightnews.recyclerview.NewsAdapter
 import com.cailloutr.rightnews.ui.CustomItemAnimator
@@ -74,51 +70,11 @@ class LatestNewsFragment : Fragment() {
         val newsAdapter = setupAdapter()
         binding.latestNewsRecyclerview.adapter = newsAdapter
 
-        /*lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                newsAdapter.loadStateFlow.collect {
-                    binding.prependProgress.isVisible = it.source.prepend is LoadState.Loading
-                    binding.appendProgress.isVisible = it.source.append is LoadState.Loading
-                }
-            }
-        }*/
-
         setupNews(newsAdapter)
 
         setupRefreshFunction()
 
         showSnackBar()
-
-        /*collectLatestLifecycleFlow(latestNewsViewModel.latestNewsState) { result ->
-            when (result.status) {
-                Status.LOADING -> {
-                    binding.latestNewsRecyclerview.hide()
-                    binding.placeholderContainer.hide()
-                    binding.shimmerLayout.show()
-                    binding.shimmerLayout.startShimmerAnimation()
-                }
-                Status.SUCCESS -> {
-                    if (binding.swipeRefreshLayout.isRefreshing) binding.swipeRefreshLayout.isRefreshing =
-                        false
-
-                    result.data?.let { newContainer ->
-                        binding.shimmerLayout.hide()
-                        binding.shimmerLayout.stopShimmerAnimation()
-
-                        val newsContainerResult = newContainer.results
-                        if (newsContainerResult.isEmpty()) {
-                            binding.placeholderContainer.show()
-                        } else {
-                            binding.latestNewsRecyclerview.show()
-                            newsAdapter.submitData(newsContainerResult)
-                        }
-                    }
-                }
-                Status.ERROR -> {
-                    showErrorMessage(result)
-                }
-            }
-        }*/
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             latestNewsViewModel.setShouldRefresh(true)
@@ -196,13 +152,20 @@ class LatestNewsFragment : Fragment() {
                 args.sectionId!!.lowercase(),
                 args.sectionId!!.lowercase()
             )
-        ) {}
-    }
-
-    private fun showErrorMessage(result: Resource<NewsContainer>) {
-        result.message?.let { message ->
-            binding.root.snackbar(NETWORK_ERROR_MESSAGE)
-            Log.e(TAG, "Error: $message")
+        ) { response ->
+            when (response.status) {
+                Status.SUCCESS -> {
+                    latestNewsViewModel.showSnackBarMessage(R.string.network_status_success)
+                }
+                Status.ERROR -> {
+                    if (response.message == Constants.NETWORK_ERROR) {
+                        latestNewsViewModel.showSnackBarMessage(R.string.network_error)
+                    } else {
+                        latestNewsViewModel.showSnackBarMessage(R.string.unknown_error)
+                    }
+                }
+                else -> {}
+            }
         }
     }
 
@@ -210,23 +173,6 @@ class LatestNewsFragment : Fragment() {
         val newsAdapter = NewsAdapter(ItemNewsType.CATEGORIZED) {
             navigateToNewsDetailsFragment(it)
         }
-        /*binding.latestNewsRecyclerview.adapter = newsAdapter.withLoadStateHeaderAndFooter(
-            header = NewsLoadStateAdapter { newsAdapter.retry() },
-            footer = NewsLoadStateAdapter { newsAdapter.retry() },
-        )
-        lifecycleScope.launch {
-            newsAdapter.loadStateFlow.collect { loadState ->
-                val isListEmpty =
-                    loadState.refresh is LoadState.NotLoading && newsAdapter.itemCount == 0
-                // show empty list
-                binding.placeholderContainer.isVisible = isListEmpty
-                // Only show the list if refresh succeeds.
-                binding.latestNewsRecyclerview.isVisible = !isListEmpty
-
-                // Show loading spinner during initial load or refresh.
-                binding.shimmerLayout.isVisible = loadState.source.refresh is LoadState.Loading
-            }
-        }*/
 
         binding.latestNewsRecyclerview.itemAnimator = CustomItemAnimator()
         return newsAdapter
